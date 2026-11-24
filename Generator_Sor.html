@@ -1,0 +1,4248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор СОР №4 — Математика, 5 класс</title>
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & BASE RESET
+       ========================================================================== */
+    :root {
+      --bg-page: #f3f6fc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-indigo-soft: #eef2ff;
+      --bg-indigo-hover: #e0e7ff;
+
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+
+      --border-light: #e2e8f0;
+      --border-mid: #cbd5e1;
+
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #818cf8;
+
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
+
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.07);
+      --shadow-lg: 0 10px 30px rgba(79, 70, 229, 0.12);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-math: "Cambria Math", "Times New Roman", Georgia, serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: all 0.18s ease;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==========================================================================
+       2. HEADER & NAVIGATION TABS
+       ========================================================================== */
+    .app-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.28);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .nav-tabs {
+      display: inline-flex;
+      background: var(--bg-page);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      gap: 4px;
+    }
+
+    .nav-tab {
+      padding: 9px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+    }
+
+    .nav-tab.active {
+      background: var(--bg-card);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       3. STATS BAR
+       ========================================================================== */
+    .stats-bar {
+      margin: 18px 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stats-items {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-chip strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .stat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .stat-dot.green { background: var(--success); }
+    .stat-dot.amber { background: var(--warning); }
+
+    /* ==========================================================================
+       4. BUTTONS & CONTROLS
+       ========================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 11px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      min-height: 44px;
+      white-space: nowrap;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      min-height: 36px;
+      border-radius: 9px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.24);
+    }
+
+    .btn-success:hover {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-indigo-soft);
+      color: var(--primary-dark);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-indigo-hover);
+    }
+
+    .btn-outline {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-mid);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-subtle);
+      border-color: var(--primary-light);
+    }
+
+    .btn-ghost-danger {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .btn-ghost-danger:hover {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    /* ==========================================================================
+       5. CARDS & VARIANT HEADER
+       ========================================================================== */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 18px;
+    }
+
+    .sor-meta-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%);
+      border-color: #dbe4ff;
+    }
+
+    .sor-meta-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .variant-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .sor-heading {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .sor-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 8px 14px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .timer-display {
+      font-variant-numeric: tabular-nums;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      min-width: 58px;
+      text-align: center;
+    }
+
+    .timer-display.low {
+      color: var(--danger);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+
+    .objectives-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .obj-tag {
+      font-size: 0.78rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .obj-tag strong {
+      color: var(--primary-dark);
+    }
+
+    .sor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .sor-toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       6. MATHEMATICAL FRACTION RENDERING (2-STORY STACKED FRACTIONS)
+       ========================================================================== */
+    .math-expr {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.2;
+      vertical-align: middle;
+    }
+
+    .math-inline {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 3px;
+      font-size: 1.08em;
+      font-weight: 600;
+    }
+
+    .mixed-num {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      gap: 3px;
+    }
+
+    .whole-part {
+      font-size: 1.12em;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      line-height: 1.08;
+      margin: 0 2px;
+      position: relative;
+    }
+
+    .frac-num {
+      padding: 0 5px 2px 5px;
+      border-bottom: 1.8px solid currentColor;
+      text-align: center;
+      font-size: 0.86em;
+      font-weight: 700;
+      min-width: 1.2em;
+    }
+
+    .frac-den {
+      padding: 2px 5px 0 5px;
+      text-align: center;
+      font-size: 0.86em;
+      font-weight: 700;
+      min-width: 1.2em;
+    }
+
+    /* Additional multiplier notation like in school notebooks */
+    .frac-mult {
+      position: relative;
+      margin-right: 6px;
+    }
+
+    .mult-tag {
+      display: inline-block;
+      font-size: 0.68em;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--bg-indigo-soft);
+      border: 1px solid #c7d2fe;
+      border-radius: 5px;
+      padding: 1px 4px;
+      margin-left: 2px;
+      vertical-align: super;
+      line-height: 1.1;
+    }
+
+    .math-op {
+      font-weight: 700;
+      color: var(--text-secondary);
+      padding: 0 2px;
+    }
+
+    .math-var {
+      font-style: italic;
+      font-family: var(--font-math);
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .math-paren {
+      font-size: 1.55em;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1;
+    }
+
+    /* ==========================================================================
+       7. FRACTION INPUT WIDGET (3 FIELDS: WHOLE + NUM / DEN)
+       ========================================================================== */
+    .frac-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 2px solid var(--border-light);
+      border-radius: 14px;
+      padding: 8px 12px;
+      transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .frac-input-wrap:focus-within {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+    }
+
+    .frac-input-wrap.state-correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .frac-input-wrap.state-almost {
+      border-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .frac-input-wrap.state-wrong {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .fi-whole {
+      width: 54px;
+      height: 46px;
+      border: 1.5px solid var(--border-mid);
+      border-radius: 9px;
+      text-align: center;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: #fff;
+    }
+
+    .fi-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .fi-num, .fi-den {
+      width: 58px;
+      height: 34px;
+      border: 1.5px solid var(--border-mid);
+      border-radius: 7px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: #fff;
+    }
+
+    .fi-bar {
+      width: 62px;
+      height: 2.5px;
+      background: var(--text-main);
+      border-radius: 2px;
+    }
+
+    .fi-whole::placeholder, .fi-num::placeholder, .fi-den::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+      font-size: 0.72rem;
+    }
+
+    .input-hint-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    /* ==========================================================================
+       8. COMPARISON BUTTONS (<, =, >)
+       ========================================================================== */
+    .cmp-group {
+      display: inline-flex;
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 5px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-light);
+    }
+
+    .cmp-group.state-correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .cmp-group.state-wrong {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .cmp-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      background: #fff;
+      border: 1.5px solid var(--border-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cmp-btn:hover {
+      border-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .cmp-btn.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+    }
+
+    /* ==========================================================================
+       9. TASK CARDS & SUB-ITEMS
+       ========================================================================== */
+    .task-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .task-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .task-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .task-num-badge {
+      background: var(--bg-indigo-soft);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+
+    .task-goal-badge {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      padding: 3px 9px;
+      border-radius: 7px;
+      font-weight: 600;
+    }
+
+    .task-points-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--bg-subtle);
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+    }
+
+    .task-points-badge.earned-full {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: var(--success-border);
+    }
+
+    .task-points-badge.earned-part {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border-color: var(--warning-border);
+    }
+
+    .task-points-badge.earned-zero {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: var(--danger-border);
+    }
+
+    .task-instruction {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .subitems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .subitem-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .subitem-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subitem-letter {
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 1rem;
+      min-width: 22px;
+    }
+
+    .word-problem-text {
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-main);
+      background: #f8faff;
+      border-left: 4px solid var(--primary);
+      padding: 16px 18px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 16px;
+    }
+
+    .answer-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .answer-label {
+      font-weight: 700;
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+    }
+
+    .unit-label {
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 1.02rem;
+    }
+
+    /* ==========================================================================
+       10. FEEDBACK, SOLUTIONS & DESCRIPTORS
+       ========================================================================== */
+    .feedback-msg {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .feedback-msg.correct {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+
+    .feedback-msg.almost {
+      background: var(--warning-bg);
+      color: #b45309;
+      border: 1px solid var(--warning-border);
+    }
+
+    .feedback-msg.wrong {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid var(--danger-border);
+    }
+
+    .solution-box {
+      margin-top: 14px;
+      background: #ffffff;
+      border: 1px solid #dbe4ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.92rem;
+    }
+
+    .solution-title {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .solution-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .solution-steps li {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.6;
+      color: var(--text-main);
+      flex-wrap: wrap;
+    }
+
+    .step-bullet {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      background: var(--bg-indigo-soft);
+      color: var(--primary-dark);
+      font-size: 0.74rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .descriptors-box {
+      margin-top: 14px;
+      background: var(--bg-subtle);
+      border: 1px dashed var(--border-mid);
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .descriptors-box h4 {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .descriptors-box ul {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* ==========================================================================
+       11. SOR RESULT BANNER
+       ========================================================================== */
+    .result-banner {
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 20px;
+      border: 2px solid var(--border-light);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .result-banner.level-high {
+      background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+      border-color: var(--success-border);
+    }
+
+    .result-banner.level-mid {
+      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+      border-color: var(--warning-border);
+    }
+
+    .result-banner.level-low {
+      background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+      border-color: var(--danger-border);
+    }
+
+    .result-score-big {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .level-pill {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.86rem;
+      margin-top: 6px;
+    }
+
+    .level-high .level-pill { background: var(--success); color: #fff; }
+    .level-mid .level-pill { background: var(--warning); color: #fff; }
+    .level-low .level-pill { background: var(--danger); color: #fff; }
+
+    .progress-track {
+      width: 100%;
+      max-width: 300px;
+      height: 12px;
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .level-high .progress-fill { background: var(--success); }
+    .level-mid .progress-fill { background: var(--warning); }
+    .level-low .progress-fill { background: var(--danger); }
+
+    .sor-footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0 40px;
+    }
+
+    /* ==========================================================================
+       12. TRAINER MODE STYLES
+       ========================================================================== */
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .topic-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: 14px;
+      padding: 12px 14px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 70px;
+    }
+
+    .topic-card:hover {
+      border-color: var(--primary-light);
+      background: #fafbff;
+    }
+
+    .topic-card.active {
+      border-color: var(--primary);
+      background: var(--bg-indigo-soft);
+      box-shadow: 0 2px 10px rgba(79, 70, 229, 0.14);
+    }
+
+    .topic-card-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .topic-card-code {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .topic-card.active .topic-card-title {
+      color: var(--primary-dark);
+    }
+
+    .trainer-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .diff-pills {
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 4px;
+      border-radius: 12px;
+      gap: 4px;
+    }
+
+    .diff-pill {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-height: 36px;
+    }
+
+    .diff-pill.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .trainer-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .metric-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 7px 13px;
+      border-radius: 11px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-pill strong {
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .metric-pill.streak-hot {
+      background: #fff7ed;
+      border-color: #fed7aa;
+      color: #c2410c;
+    }
+
+    .trainer-stage {
+      padding: 26px;
+    }
+
+    .trainer-stage-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .trainer-problem-area {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .trainer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hint-box {
+      margin-top: 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: #1e40af;
+      font-size: 0.92rem;
+    }
+
+    .hint-box strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* ==========================================================================
+       13. MODAL & TOAST
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+    }
+
+    .modal-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .modal-text {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--text-main);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 90;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       14. PRINT-ONLY ELEMENTS & @MEDIA PRINT
+       ========================================================================== */
+    .print-only {
+      display: none;
+    }
+
+    .print-cmp-circle {
+      display: none;
+    }
+
+    .print-blank-answer {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        margin: 14mm;
+      }
+
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt;
+        line-height: 1.45;
+      }
+
+      .app-header,
+      .stats-bar,
+      .sor-meta-card,
+      .result-banner,
+      .sor-footer-actions,
+      #view-trainer,
+      .no-print,
+      .input-hint-note,
+      .feedback-msg,
+      .solution-box,
+      .descriptors-box,
+      .frac-input-wrap,
+      .cmp-group,
+      .modal-backdrop,
+      .toast,
+      .virtual-keypad,
+      .vk-fab,
+      .vk-toggle-chip {
+        display: none !important;
+      }
+
+      #view-sor {
+        display: block !important;
+      }
+
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .print-only {
+        display: block !important;
+      }
+
+      .print-header {
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+      }
+
+      .print-header h1 {
+        font-size: 14pt;
+        margin-bottom: 4px;
+      }
+
+      .print-header-meta {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 10pt;
+        margin-top: 8px;
+      }
+
+      .task-card {
+        border: 1px solid #94a3b8;
+        box-shadow: none !important;
+        border-radius: 6px;
+        padding: 12px 14px;
+        margin-bottom: 12px;
+        page-break-inside: avoid;
+      }
+
+      .task-header {
+        padding-bottom: 6px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #cbd5e1;
+      }
+
+      .task-num-badge,
+      .task-goal-badge,
+      .task-points-badge {
+        background: none !important;
+        color: #000 !important;
+        border: 1px solid #64748b !important;
+        padding: 2px 7px;
+      }
+
+      .subitems-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .subitem-box {
+        background: none !important;
+        border: 1px dashed #cbd5e1;
+        padding: 10px;
+      }
+
+      .word-problem-text {
+        background: none !important;
+        border-left: 3px solid #000;
+        padding: 6px 10px;
+        margin-bottom: 10px;
+      }
+
+      .print-cmp-circle {
+        display: inline-block !important;
+        width: 28px;
+        height: 28px;
+        border: 1.5px solid #000;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin: 0 6px;
+      }
+
+      .print-blank-answer {
+        display: inline-block !important;
+        border-bottom: 1.5px solid #000;
+        min-width: 110px;
+        height: 22px;
+        vertical-align: bottom;
+      }
+
+      .print-work-space {
+        display: block !important;
+        height: 112px;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 27px,
+          #94a3b8 27px,
+          #94a3b8 28px
+        );
+        margin-top: 10px;
+      }
+
+      /* Print Answer Key only when user enabled the checkbox */
+      #print-answer-key {
+        display: none !important;
+      }
+
+      body.print-with-answers #print-answer-key {
+        display: block !important;
+        page-break-before: always;
+      }
+
+      .print-key-item {
+        border-bottom: 1px solid #cbd5e1;
+        padding: 8px 0;
+        page-break-inside: avoid;
+      }
+    }
+
+    /* ==========================================================================
+       15. RESPONSIVE TWEAKS
+       ========================================================================== */
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav-tabs {
+        width: 100%;
+      }
+
+      .nav-tab {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.84rem;
+        padding: 9px 10px;
+      }
+
+      .card, .task-card, .trainer-stage {
+        padding: 16px;
+      }
+
+      .subitems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .math-expr {
+        font-size: 1.12rem;
+      }
+
+      .topics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timer-box {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    /* ==========================================================================
+       16. COMPACT BUILT-IN VIRTUAL KEYBOARD (MOBILE-FRIENDLY)
+       ========================================================================== */
+    body.vk-open {
+      padding-bottom: 145px;
+    }
+
+    .fi-whole.vk-active, .fi-num.vk-active, .fi-den.vk-active {
+      border-color: var(--primary);
+      background: #eef2ff;
+      box-shadow: 0 0 0 2.5px rgba(79, 70, 229, 0.25);
+    }
+
+    .virtual-keypad {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 65;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-mid);
+      box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.14);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)) 8px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .virtual-keypad.vk-hidden {
+      transform: translateY(110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .vk-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .vk-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      height: 28px;
+    }
+
+    .vk-parts {
+      display: inline-flex;
+      background: var(--bg-page);
+      padding: 2px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      gap: 2px;
+    }
+
+    .vk-part-btn {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-height: 22px;
+      line-height: 1;
+    }
+
+    .vk-part-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .vk-hide-btn {
+      padding: 3px 9px;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      min-height: 24px;
+    }
+
+    .vk-hide-btn:hover {
+      background: var(--border-light);
+      color: var(--text-main);
+    }
+
+    .vk-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+    }
+
+    .vk-key {
+      height: 36px;
+      border-radius: 9px;
+      background: #f8fafc;
+      border: 1px solid var(--border-mid);
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+    }
+
+    .vk-key:active {
+      transform: scale(0.95);
+      background: var(--bg-indigo-soft);
+      border-color: var(--primary);
+    }
+
+    .vk-key-back {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: var(--danger);
+      font-size: 1rem;
+    }
+
+    .vk-key-done {
+      background: var(--primary);
+      border-color: var(--primary-dark);
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .vk-key-done:active {
+      background: var(--primary-dark);
+    }
+
+    .vk-fab {
+      position: fixed;
+      bottom: 14px;
+      right: 14px;
+      z-index: 60;
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vk-fab:hover {
+      background: var(--primary-dark);
+    }
+
+    .vk-toggle-chip {
+      padding: 6px 11px;
+      border-radius: 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border-light);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .vk-toggle-chip.active {
+      background: var(--bg-indigo-soft);
+      border-color: #c7d2fe;
+      color: var(--primary-dark);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">¾</div>
+        <div>
+          <div class="brand-title">Генератор СОР №4 — Математика, 5 класс</div>
+          <div class="brand-sub">2 четверть • Раздел 5.2А «Действия над обыкновенными дробями» (КТП РК)</div>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist" aria-label="Режимы работы">
+        <button class="nav-tab active" id="tab-sor" role="tab" aria-selected="true" onclick="switchMode('sor')">
+          📝 Полный вариант СОР №4
+        </button>
+        <button class="nav-tab" id="tab-trainer" role="tab" aria-selected="false" onclick="switchMode('trainer')">
+          ♾️ Бесконечный тренажёр
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ===================== GLOBAL STATS BAR ===================== -->
+    <section class="stats-bar" aria-label="Статистика тренировок">
+      <div class="stats-items">
+        <div class="stat-chip">
+          <span class="stat-dot"></span>
+          <span>Вариантов СОР пройдено: <strong id="stat-sor-count">0</strong></span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-dot green"></span>
+          <span>Лучший СОР: <strong id="stat-sor-best">—</strong></span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-dot amber"></span>
+          <span>Решено в тренажёре: <strong id="stat-trainer-solved">0</strong></span>
+        </div>
+        <div class="stat-chip">
+          <span>Рекорд серии: <strong id="stat-best-streak">0</strong> 🔥</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="vk-toggle-chip" id="vk-mode-toggle" onclick="VirtualKeypad.toggleEnabled()" title="Встроенная компактная цифровая клавиатура">
+          ⌨️ Мини-клавиатура: <strong id="vk-mode-label">Авто</strong>
+        </button>
+        <button class="btn-ghost-danger" onclick="openResetModal()">Сбросить статистику</button>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         MODE 1: FULL SOR #4 VARIANT
+         ======================================================================== -->
+    <section id="view-sor">
+      <!-- Print-only Official Worksheet Header -->
+      <div class="print-only print-header">
+        <h1>Суммативное оценивание за раздел 5.2А «Действия над обыкновенными дробями» (СОР №4)</h1>
+        <div>Математика, 5 класс • 2 четверть • Максимальный балл: 14 • Время выполнения: 20 минут</div>
+        <div class="print-header-meta">
+          <span><strong>Вариант №<span id="print-variant-num">1</span></strong></span>
+          <span>ФИ ученика: _____________________________________</span>
+          <span>Класс: 5 «___»</span>
+          <span>Дата: ___________</span>
+        </div>
+      </div>
+
+      <!-- Screen Variant Header & Controls -->
+      <div class="card sor-meta-card">
+        <div class="sor-meta-top">
+          <div>
+            <div class="variant-badge">Вариант #<span id="sor-variant-num">101</span> • 14 баллов</div>
+            <h1 class="sor-heading">СОР №4: Действия над обыкновенными дробями</h1>
+            <p class="sor-subtitle">5 заданий по целям обучения КТП 5 класса. Решите все задания и нажмите «Проверить СОР».</p>
+          </div>
+
+          <!-- Optional 20-minute Timer -->
+          <div class="timer-box" aria-label="Таймер на 20 минут">
+            <span title="Таймер">⏱️</span>
+            <div class="timer-display" id="timer-display">20:00</div>
+            <button class="btn btn-sm btn-secondary" id="timer-toggle-btn" onclick="Timer.toggle()">Старт</button>
+            <button class="btn btn-sm btn-outline" onclick="Timer.reset()">Сброс</button>
+          </div>
+        </div>
+
+        <div class="objectives-list">
+          <span class="obj-tag"><strong>5.1.2.16</strong> Сравнение и ОЗ</span>
+          <span class="obj-tag"><strong>5.1.2.17</strong> Одинаковые знаменатели</span>
+          <span class="obj-tag"><strong>5.1.2.18</strong> Разные знаменатели</span>
+          <span class="obj-tag"><strong>5.1.2.19</strong> Вычитание из натурального</span>
+          <span class="obj-tag"><strong>5.1.2.20</strong> Смешанные числа</span>
+        </div>
+
+        <div class="sor-toolbar">
+          <div class="sor-toolbar-group">
+            <button class="btn btn-primary" onclick="SOR.generateNew()">🔄 Новый вариант</button>
+            <button class="btn btn-outline" onclick="SOR.printVariant()">🖨️ Печать варианта</button>
+            <label class="checkbox-label">
+              <input type="checkbox" id="print-answers-checkbox">
+              <span>Печатать с ответами</span>
+            </label>
+          </div>
+          <div class="input-hint-note">
+            💡 В полях ответа: пустая целая часть = обыкновенная дробь; пустая дробь = целое число.
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Summary Banner (Hidden until Checked) -->
+      <div id="sor-result-banner" class="result-banner hidden" aria-live="polite">
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Результат проверки СОР №4</div>
+          <div class="result-score-big" id="sor-score-text">0 / 14 баллов (0%)</div>
+          <div class="level-pill" id="sor-level-pill">Уровень освоения</div>
+        </div>
+        <div style="flex: 1; min-width: 220px; max-width: 340px;">
+          <div id="sor-summary-comment" style="font-size: 0.92rem; color: var(--text-secondary); font-weight: 500;"></div>
+          <div class="progress-track">
+            <div class="progress-fill" id="sor-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Generated Tasks -->
+      <div id="sor-tasks-container"></div>
+
+      <!-- Bottom Action Buttons -->
+      <div class="sor-footer-actions">
+        <button class="btn btn-success" id="btn-check-sor" onclick="SOR.checkAll()">✅ Проверить СОР</button>
+        <button class="btn btn-primary" onclick="SOR.generateNew()">🔄 Сгенерировать новый вариант</button>
+      </div>
+
+      <!-- Print-only Answer Key (Visible on Print when checkbox is checked) -->
+      <div id="print-answer-key" class="print-only"></div>
+    </section>
+
+    <!-- ========================================================================
+         MODE 2: INFINITE TOPIC TRAINER
+         ======================================================================== -->
+    <section id="view-trainer" class="hidden">
+      <!-- Topic Selector Cards -->
+      <div class="topics-grid" id="trainer-topics-grid" role="group" aria-label="Выбор темы тренажёра"></div>
+
+      <!-- Difficulty & Live Session Stats -->
+      <div class="trainer-controls-row">
+        <div class="diff-pills" role="group" aria-label="Уровень сложности">
+          <button class="diff-pill" data-diff="basic" onclick="Trainer.setDifficulty('basic')">Базовый</button>
+          <button class="diff-pill active" data-diff="standard" onclick="Trainer.setDifficulty('standard')">Стандарт СОР</button>
+          <button class="diff-pill" data-diff="advanced" onclick="Trainer.setDifficulty('advanced')">Повышенный</button>
+        </div>
+
+        <div class="trainer-metrics">
+          <div class="metric-pill" id="trainer-streak-pill">🔥 Серия: <strong id="trainer-streak">0</strong></div>
+          <div class="metric-pill">✅ Решено: <strong id="trainer-session-solved">0</strong></div>
+          <div class="metric-pill">🎯 Точность: <strong id="trainer-accuracy">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Active Trainer Problem Card -->
+      <div class="card trainer-stage">
+        <div class="trainer-stage-head">
+          <div class="task-title-wrap">
+            <span class="task-num-badge" id="tr-topic-badge">Тема</span>
+            <span class="task-goal-badge" id="tr-goal-badge">5.1.2.18</span>
+          </div>
+          <span class="task-goal-badge" id="tr-diff-badge">Стандарт СОР</span>
+        </div>
+
+        <div class="task-instruction" id="tr-instruction">Вычислите значение выражения:</div>
+
+        <div class="trainer-problem-area" id="tr-problem-area">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div class="input-hint-note" id="tr-input-hint">
+          💡 Навигация с клавиатуры: стрелки, пробел, «/» (в знаменатель), Enter (проверить). Пустая целая часть = дробь, пустая дробь = целое число.
+        </div>
+
+        <div id="tr-feedback-container" style="margin-top: 14px;"></div>
+        <div id="tr-hint-container"></div>
+        <div id="tr-solution-container"></div>
+
+        <div class="trainer-actions" style="margin-top: 18px;">
+          <button class="btn btn-success" id="tr-btn-check" onclick="Trainer.check()">✅ Проверить</button>
+          <button class="btn btn-secondary" id="tr-btn-hint" onclick="Trainer.showHint()">💡 Подсказка</button>
+          <button class="btn btn-outline hidden" id="tr-btn-show-sol" onclick="Trainer.revealSolution()">📖 Показать решение</button>
+          <button class="btn btn-primary" id="tr-btn-next" onclick="Trainer.nextProblem()">➡️ Следующая задача</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== RESET STATS CONFIRMATION MODAL ===================== -->
+  <div id="reset-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title" onclick="if(event.target===this) closeResetModal()">
+    <div class="modal-card">
+      <div class="modal-title" id="reset-modal-title">Сбросить статистику?</div>
+      <div class="modal-text">Все сохранённые результаты по вариантам СОР №4, решённым задачам и рекордам серии будут обнулены.</div>
+      <div class="modal-actions">
+        <button class="btn btn-sm btn-outline" onclick="closeResetModal()">Отмена</button>
+        <button class="btn btn-sm btn-primary" style="background: var(--danger);" onclick="confirmResetStats()">Сбросить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+
+  <!-- ===================== COMPACT VIRTUAL NUMERIC KEYPAD ===================== -->
+  <button type="button" id="vk-fab" class="vk-fab hidden" onclick="VirtualKeypad.showLastOrFirst()" aria-label="Открыть мини-клавиатуру">
+    ⌨️ Клавиатура
+  </button>
+
+  <div id="virtual-keypad" class="virtual-keypad vk-hidden" role="region" aria-label="Компактная цифровая клавиатура">
+    <div class="vk-inner">
+      <div class="vk-topbar">
+        <div class="vk-parts" role="group" aria-label="Выбор части дроби">
+          <button type="button" class="vk-part-btn" id="vk-part-whole" onclick="VirtualKeypad.switchPart('whole')">Цел.</button>
+          <button type="button" class="vk-part-btn" id="vk-part-num" onclick="VirtualKeypad.switchPart('num')">Числ.</button>
+          <button type="button" class="vk-part-btn" id="vk-part-den" onclick="VirtualKeypad.switchPart('den')">Знам.</button>
+        </div>
+        <button type="button" class="vk-hide-btn" onclick="VirtualKeypad.hide()">Скрыть ▾</button>
+      </div>
+      <div class="vk-grid">
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('1')">1</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('2')">2</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('3')">3</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('4')">4</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('5')">5</button>
+        <button type="button" class="vk-key vk-key-back" onclick="VirtualKeypad.pressBackspace()" aria-label="Удалить">⌫</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('6')">6</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('7')">7</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('8')">8</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('9')">9</button>
+        <button type="button" class="vk-key" onclick="VirtualKeypad.pressDigit('0')">0</button>
+        <button type="button" class="vk-key vk-key-done" onclick="VirtualKeypad.pressDone()" aria-label="Далее или проверить">✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== APPLICATION JAVASCRIPT ===================== -->
+  <script>
+    'use strict';
+
+    /* ==========================================================================
+       1. EXACT FRACTION MATH ENGINE & HTML RENDERER
+       ========================================================================== */
+    const MathFrac = {
+      /** Greatest Common Divisor (Euclidean algorithm) */
+      gcd(a, b) {
+        a = Math.abs(Math.round(a));
+        b = Math.abs(Math.round(b));
+        while (b !== 0) {
+          const t = b;
+          b = a % b;
+          a = t;
+        }
+        return a || 1;
+      },
+
+      /** Least Common Multiple */
+      lcm(a, b) {
+        if (a === 0 || b === 0) return 0;
+        return Math.abs((a / this.gcd(a, b)) * b);
+      },
+
+      /** Create reduced improper fraction { n, d } from (whole, num, den) */
+      fromMixed(whole, num, den) {
+        const d = den || 1;
+        const n = whole * d + num;
+        return this.reduce(n, d);
+      },
+
+      /** Reduce fraction n/d */
+      reduce(n, d) {
+        if (d < 0) { n = -n; d = -d; }
+        const g = this.gcd(n, d);
+        return { n: n / g, d: d / g };
+      },
+
+      /** Add two fractions {n, d} */
+      add(f1, f2) {
+        return this.reduce(f1.n * f2.d + f2.n * f1.d, f1.d * f2.d);
+      },
+
+      /** Subtract f1 - f2 */
+      sub(f1, f2) {
+        return this.reduce(f1.n * f2.d - f2.n * f1.d, f1.d * f2.d);
+      },
+
+      /** Compare f1 and f2: returns '<', '=', or '>' */
+      compare(f1, f2) {
+        const diff = f1.n * f2.d - f2.n * f1.d;
+        if (diff < 0) return '<';
+        if (diff > 0) return '>';
+        return '=';
+      },
+
+      /** Convert reduced {n, d} to canonical mixed { whole, num, den } */
+      toMixed(f) {
+        const r = this.reduce(f.n, f.d);
+        const whole = Math.floor(r.n / r.d);
+        const num = r.n % r.d;
+        return { whole, num, den: r.d };
+      },
+
+      /** Render a pure stacked fraction num/den (does NOT simplify) */
+      htmlFrac(num, den, mult = null) {
+        const multHtml = mult && mult > 1 ? `<span class="mult-tag">×${mult}</span>` : '';
+        return `<span class="frac"><span class="frac-num">${num}</span><span class="frac-den">${den}</span></span>${multHtml}`;
+      },
+
+      /** Render an explicit mixed number (whole, num, den) without altering form */
+      htmlMixedRaw(whole, num, den, mult = null) {
+        if (num === 0 || !den) {
+          return `<span class="whole-part">${whole}</span>`;
+        }
+        if (whole === 0) {
+          return this.htmlFrac(num, den, mult);
+        }
+        return `<span class="mixed-num"><span class="whole-part">${whole}</span>${this.htmlFrac(num, den, mult)}</span>`;
+      },
+
+      /** Render canonical simplified mixed number from { n, d } */
+      htmlCanonical(f) {
+        const m = this.toMixed(f);
+        return this.htmlMixedRaw(m.whole, m.num, m.den);
+      },
+
+      /** Render canonical fraction inside inline prose */
+      htmlInline(html) {
+        return `<span class="math-inline">${html}</span>`;
+      },
+
+      /** Plain text representation for screen readers / debug */
+      textCanonical(f) {
+        const m = this.toMixed(f);
+        if (m.num === 0) return `${m.whole}`;
+        if (m.whole === 0) return `${m.num}/${m.den}`;
+        return `${m.whole} ${m.num}/${m.den}`;
+      }
+    };
+
+    /* ==========================================================================
+       2. RANDOM UTILITIES & DIFFICULTY PRESETS
+       ========================================================================== */
+    const Rand = {
+      int(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      },
+      pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      },
+      chance(prob) {
+        return Math.random() < prob;
+      }
+    };
+
+    const DIFF_CONFIG = {
+      basic: {
+        label: 'Базовый',
+        dens: [2, 3, 4, 5, 6, 8, 9, 10, 12],
+        sameDens: [4, 6, 8, 9, 10, 12],
+        maxLcm: 36,
+        maxWhole: 7
+      },
+      standard: {
+        label: 'Стандарт СОР',
+        dens: [3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24],
+        sameDens: [6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24],
+        maxLcm: 72,
+        maxWhole: 14
+      },
+      advanced: {
+        label: 'Повышенный',
+        dens: [4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 28, 30, 32, 36],
+        sameDens: [12, 14, 15, 16, 18, 20, 24, 28, 30, 36],
+        maxLcm: 120,
+        maxWhole: 22
+      }
+    };
+
+    /** Helper: pick two distinct denominators with nice LCM */
+    function pickDenPair(diff = 'standard') {
+      const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+      for (let tries = 0; tries < 200; tries++) {
+        const d1 = Rand.pick(cfg.dens);
+        const d2 = Rand.pick(cfg.dens);
+        if (d1 === d2) continue;
+        const L = MathFrac.lcm(d1, d2);
+        if (L <= cfg.maxLcm && L >= Math.max(d1, d2)) {
+          // For standard/advanced, prefer non-trivial LCM sometimes
+          if (diff === 'advanced' && L < 24 && tries < 80) continue;
+          return [d1, d2, L];
+        }
+      }
+      return [6, 8, 24];
+    }
+
+    /** Helper: pick a reduced proper numerator for denominator d */
+    function pickReducedNum(d, minNum = 1, maxNum = d - 1) {
+      const candidates = [];
+      for (let n = minNum; n <= maxNum; n++) {
+        if (MathFrac.gcd(n, d) === 1) candidates.push(n);
+      }
+      if (candidates.length === 0) return 1;
+      return Rand.pick(candidates);
+    }
+
+    /** Build standard step-by-step arithmetic explanation for adding/subtracting mixed/proper fractions */
+    function buildFractionOpSteps(w1, n1, d1, w2, n2, d2, op) {
+      const steps = [];
+      const f1 = MathFrac.fromMixed(w1, n1, d1);
+      const f2 = MathFrac.fromMixed(w2, n2, d2);
+      const ans = op === '+' ? MathFrac.add(f1, f2) : MathFrac.sub(f1, f2);
+
+      // Special clean cases when one or both operands are whole numbers (numerator === 0)
+      if (n1 === 0 && n2 === 0) {
+        steps.push(
+          op === '+'
+            ? `Сложим натуральные числа: ${w1} + ${w2} = <strong>${w1 + w2}</strong>.`
+            : `Вычтем натуральные числа: ${w1} − ${w2} = <strong>${w1 - w2}</strong>.`
+        );
+        return { ans, steps };
+      }
+
+      if (n1 === 0 && n2 > 0) {
+        if (op === '+') {
+          steps.push(
+            `Сложим натуральное число ${w1} и ${w2 > 0 ? 'смешанное число' : 'дробь'} ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w2, n2, d2))}: ` +
+            `<strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+          );
+        } else {
+          const remW = (w1 - 1) - w2;
+          steps.push(
+            `Представим натуральное число ${w1} в виде смешанного числа со знаменателем ${d2}: ` +
+            `${w1} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w1 - 1, d2, d2))}.`
+          );
+          steps.push(
+            `Вычтем отдельно целые части (${w1 - 1} − ${w2} = ${remW}) и дробные части ` +
+            `(${MathFrac.htmlInline(MathFrac.htmlFrac(d2, d2))} − ${MathFrac.htmlInline(MathFrac.htmlFrac(n2, d2))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(d2 - n2, d2))}): ` +
+            `<strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+          );
+        }
+        return { ans, steps };
+      }
+
+      if (n1 > 0 && n2 === 0) {
+        const resW = op === '+' ? w1 + w2 : w1 - w2;
+        steps.push(
+          op === '+'
+            ? `Прибавим натуральное число ${w2} к целой части: ${w1} + ${w2} = ${resW}, дробная часть ${MathFrac.htmlInline(MathFrac.htmlFrac(n1, d1))} не меняется. Ответ: <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+            : `Вычтем натуральное число ${w2} из целой части: ${w1} − ${w2} = ${resW}, дробная часть ${MathFrac.htmlInline(MathFrac.htmlFrac(n1, d1))} не меняется. Ответ: <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+        );
+        return { ans, steps };
+      }
+
+      const L = MathFrac.lcm(d1, d2);
+      const m1 = L / d1;
+      const m2 = L / d2;
+      const nn1 = n1 * m1;
+      const nn2 = n2 * m2;
+
+      if (d1 !== d2) {
+        steps.push(`Найдём наименьший общий знаменатель: НОК(${d1}, ${d2}) = <strong>${L}</strong>.`);
+        steps.push(
+          `Приведём дробные части к знаменателю ${L} (дополнительные множители ${m1} и ${m2}): ` +
+          `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w1, n1, d1, m1))} ${op === '+' ? '+' : '−'} ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w2, n2, d2, m2))} = ` +
+          `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w1, nn1, L))} ${op === '+' ? '+' : '−'} ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w2, nn2, L))}.`
+        );
+      }
+
+      if (op === '+') {
+        const sumW = w1 + w2;
+        const sumN = nn1 + nn2;
+        steps.push(
+          `Сложим ${w1 || w2 ? 'целые части и числители дробных частей' : 'числители'}: ` +
+          `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(sumW, sumN, L))}.`
+        );
+
+        let curW = sumW;
+        let curN = sumN;
+        if (curN >= L) {
+          const extraW = Math.floor(curN / L);
+          const remN = curN % L;
+          curW += extraW;
+          curN = remN;
+          if (remN === 0) {
+            steps.push(`Дробная часть ${MathFrac.htmlInline(MathFrac.htmlFrac(sumN, L))} равна ${extraW}, получаем целое число: <strong>${curW}</strong>.`);
+          } else {
+            steps.push(
+              `Выделим целую часть из неправильной дроби ${MathFrac.htmlInline(MathFrac.htmlFrac(sumN, L))} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(extraW, remN, L))} ` +
+              `и прибавим к целой части: ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(curW, curN, L))}.`
+            );
+          }
+        }
+
+        if (curN > 0) {
+          const g = MathFrac.gcd(curN, L);
+          if (g > 1) {
+            steps.push(
+              `Сократим дробную часть на НОД(${curN}, ${L}) = ${g}: ` +
+              `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(curW, curN, L))} = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+            );
+          }
+        }
+      } else {
+        // Subtraction
+        let curW1 = w1;
+        let curN1 = nn1;
+        if (curN1 < nn2) {
+          curW1 -= 1;
+          curN1 += L;
+          steps.push(
+            `Так как ${nn1} &lt; ${nn2}, «займём» 1 у целой части: ` +
+            `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w1, nn1, L))} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(curW1, curN1, L))}.`
+          );
+        }
+        const resW = curW1 - w2;
+        const resN = curN1 - nn2;
+        steps.push(
+          `Выполним вычитание: ` +
+          `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(curW1, curN1, L))} − ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w2, nn2, L))} = ` +
+          `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(resW, resN, L))}.`
+        );
+
+        if (resN > 0) {
+          const g = MathFrac.gcd(resN, L);
+          if (g > 1) {
+            steps.push(
+              `Сократим дробную часть на НОД(${resN}, ${L}) = ${g}: ` +
+              `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(resW, resN, L))} = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+            );
+          }
+        }
+      }
+
+      return { ans, steps };
+    }
+
+    /* ==========================================================================
+       3. TASK GENERATORS (STRICTLY ALIGNED WITH KTP 5.1.2.16 – 5.1.2.20)
+       ========================================================================== */
+    const Generators = {
+      /**
+       * 5.1.2.16 — Compare two ordinary fractions with different denominators
+       */
+      genCompareFractions(diff = 'standard') {
+        const makeEqual = Rand.chance(0.16);
+        let a, d1, b, d2, L;
+
+        if (makeEqual) {
+          const baseDens = diff === 'basic' ? [3, 4, 5, 6] : [3, 4, 5, 6, 7, 8, 9];
+          const baseD = Rand.pick(baseDens);
+          const baseN = pickReducedNum(baseD);
+          const k = Rand.int(2, 4);
+          if (Rand.chance(0.5)) {
+            a = baseN; d1 = baseD;
+            b = baseN * k; d2 = baseD * k;
+          } else {
+            a = baseN * k; d1 = baseD * k;
+            b = baseN; d2 = baseD;
+          }
+          L = MathFrac.lcm(d1, d2);
+        } else {
+          for (let tries = 0; tries < 100; tries++) {
+            [d1, d2, L] = pickDenPair(diff);
+            a = pickReducedNum(d1);
+            b = pickReducedNum(d2);
+            const v1 = a / d1;
+            const v2 = b / d2;
+            // Make sure fractions are reasonably close so comparison isn't trivial
+            if (Math.abs(v1 - v2) > 0.01 && Math.abs(v1 - v2) < 0.45) break;
+          }
+        }
+
+        const m1 = L / d1;
+        const m2 = L / d2;
+        const na = a * m1;
+        const nb = b * m2;
+        const sign = MathFrac.compare({ n: a, d: d1 }, { n: b, d: d2 });
+
+        const steps = [
+          `Найдём наименьший общий знаменатель: НОК(${d1}, ${d2}) = <strong>${L}</strong>.`,
+          `Приведём дроби к общему знаменателю: ` +
+          `${MathFrac.htmlInline(MathFrac.htmlFrac(a, d1, m1))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(na, L))} и ` +
+          `${MathFrac.htmlInline(MathFrac.htmlFrac(b, d2, m2))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(nb, L))}.`,
+          `Сравним числители: ${na} <strong>${sign}</strong> ${nb}, значит ${MathFrac.htmlInline(MathFrac.htmlFrac(a, d1))} <strong>${sign}</strong> ${MathFrac.htmlInline(MathFrac.htmlFrac(b, d2))}.`
+        ];
+
+        return {
+          type: 'compare',
+          goal: '5.1.2.16',
+          topicName: 'Сравнение дробей',
+          instruction: 'Сравните обыкновенные дроби, выбрав верный знак (<, =, >):',
+          leftHtml: MathFrac.htmlFrac(a, d1),
+          rightHtml: MathFrac.htmlFrac(b, d2),
+          answer: sign,
+          hints: [
+            `Найди наименьший общий знаменатель чисел ${d1} и ${d2}. Это НОК(${d1}, ${d2}) = ${L}.`,
+            `Домножь первую дробь на ${m1}, а вторую на ${m2}, затем сравни получившиеся числители.`
+          ],
+          steps
+        };
+      },
+
+      /**
+       * 5.1.2.16 — Compare mixed numbers OR improper fraction & mixed number
+       */
+      genCompareMixed(diff = 'standard') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        const modeImproper = Rand.chance(0.55);
+        const [d1, d2, L] = pickDenPair(diff);
+        const w = Rand.int(1, Math.min(7, cfg.maxWhole));
+        let leftHtml, rightHtml, f1, f2, steps, hints;
+
+        if (modeImproper) {
+          // Compare improper fraction N/d1 with mixed number w b/d2
+          const makeEqual = Rand.chance(0.18);
+          let a, b, impN, impW;
+          if (makeEqual) {
+            // Make improper fraction equal to mixed number
+            const baseD = Rand.pick([3, 4, 5, 6, 8]);
+            const baseN = pickReducedNum(baseD);
+            const k = Rand.int(2, 3);
+            impN = (w * baseD + baseN) * k;
+            const impD = baseD * k;
+            f1 = MathFrac.reduce(impN, impD);
+            f2 = MathFrac.fromMixed(w, baseN, baseD);
+            leftHtml = MathFrac.htmlFrac(impN, impD);
+            rightHtml = MathFrac.htmlMixedRaw(w, baseN, baseD);
+            const sign = '=';
+            steps = [
+              `Выделим целую часть из неправильной дроби: ${MathFrac.htmlInline(MathFrac.htmlFrac(impN, impD))} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w, baseN * k, impD))}.`,
+              `Сократим дробную часть на ${k}: ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w, baseN * k, impD))} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(w, baseN, baseD))}.`,
+              `Числа равны: ${MathFrac.htmlInline(leftHtml)} <strong>=</strong> ${MathFrac.htmlInline(rightHtml)}.`
+            ];
+            hints = [
+              `Сначала выдели целую часть из неправильной дроби ${impN}/${impD} (раздели ${impN} на ${impD} с остатком).`,
+              `Сравни целые части, а затем сократи дробную часть или приведи к общему знаменателю.`
+            ];
+            return {
+              type: 'compare',
+              goal: '5.1.2.16',
+              topicName: 'Сравнение смешанных чисел',
+              instruction: 'Сравните числа, выбрав верный знак (<, =, >):',
+              leftHtml, rightHtml, answer: sign, hints, steps
+            };
+          }
+
+          impW = Rand.chance(0.75) ? w : (w + (Rand.chance(0.5) ? 1 : -1));
+          if (impW < 1) impW = 1;
+          a = pickReducedNum(d1);
+          b = pickReducedNum(d2);
+          impN = impW * d1 + a;
+
+          const swap = Rand.chance(0.5);
+          const fImp = { n: impN, d: d1 };
+          const fMix = MathFrac.fromMixed(w, b, d2);
+          f1 = swap ? fMix : fImp;
+          f2 = swap ? fImp : fMix;
+          leftHtml = swap ? MathFrac.htmlMixedRaw(w, b, d2) : MathFrac.htmlFrac(impN, d1);
+          rightHtml = swap ? MathFrac.htmlFrac(impN, d1) : MathFrac.htmlMixedRaw(w, b, d2);
+
+          const sign = MathFrac.compare(f1, f2);
+          steps = [
+            `Преобразуем неправильную дробь в смешанное число: ${MathFrac.htmlInline(MathFrac.htmlFrac(impN, d1))} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(impW, a, d1))}.`
+          ];
+
+          if (impW !== w) {
+            steps.push(`Сравним целые части: ${swap ? w : impW} <strong>${sign}</strong> ${swap ? impW : w}.`);
+          } else {
+            const m1 = L / d1;
+            const m2 = L / d2;
+            steps.push(`Целые части равны (${w} = ${w}), поэтому сравним дробные части, приведя их к НОК(${d1}, ${d2}) = <strong>${L}</strong>:`);
+            steps.push(
+              `${MathFrac.htmlInline(MathFrac.htmlFrac(a, d1, m1))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(a * m1, L))} и ` +
+              `${MathFrac.htmlInline(MathFrac.htmlFrac(b, d2, m2))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(b * m2, L))}.`
+            );
+          }
+          steps.push(`Итог: ${MathFrac.htmlInline(leftHtml)} <strong>${sign}</strong> ${MathFrac.htmlInline(rightHtml)}.`);
+
+          hints = [
+            `Переведи неправильную дробь ${impN}/${d1} в смешанное число (раздели числитель на знаменатель с остатком).`,
+            `Сначала сравни целые части. Если они равны, приведи дробные части к общему знаменателю ${L}.`
+          ];
+
+          return {
+            type: 'compare',
+            goal: '5.1.2.16',
+            topicName: 'Сравнение смешанных чисел',
+            instruction: 'Сравните числа, выбрав верный знак (<, =, >):',
+            leftHtml, rightHtml, answer: sign, hints, steps
+          };
+        } else {
+          // Compare two mixed numbers with equal whole parts
+          const a = pickReducedNum(d1);
+          const b = pickReducedNum(d2);
+          f1 = MathFrac.fromMixed(w, a, d1);
+          f2 = MathFrac.fromMixed(w, b, d2);
+          leftHtml = MathFrac.htmlMixedRaw(w, a, d1);
+          rightHtml = MathFrac.htmlMixedRaw(w, b, d2);
+          const sign = MathFrac.compare(f1, f2);
+          const m1 = L / d1;
+          const m2 = L / d2;
+
+          steps = [
+            `Целые части равны (${w} = ${w}), значит сравним дробные части ${MathFrac.htmlInline(MathFrac.htmlFrac(a, d1))} и ${MathFrac.htmlInline(MathFrac.htmlFrac(b, d2))}.`,
+            `Найдём общий знаменатель: НОК(${d1}, ${d2}) = <strong>${L}</strong>.`,
+            `${MathFrac.htmlInline(MathFrac.htmlFrac(a, d1, m1))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(a * m1, L))} и ` +
+            `${MathFrac.htmlInline(MathFrac.htmlFrac(b, d2, m2))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(b * m2, L))}.`,
+            `Так как ${a * m1} <strong>${sign}</strong> ${b * m2}, то ${MathFrac.htmlInline(leftHtml)} <strong>${sign}</strong> ${MathFrac.htmlInline(rightHtml)}.`
+          ];
+
+          hints = [
+            `Целые части одинаковы (${w}), поэтому нужно сравнить только дробные части.`,
+            `Приведи дроби к общему знаменателю ${L} (множители ${m1} и ${m2}).`
+          ];
+
+          return {
+            type: 'compare',
+            goal: '5.1.2.16',
+            topicName: 'Сравнение смешанных чисел',
+            instruction: 'Сравните смешанные числа, выбрав верный знак (<, =, >):',
+            leftHtml, rightHtml, answer: sign, hints, steps
+          };
+        }
+      },
+
+      /**
+       * 5.1.2.17 — Addition/subtraction of fractions with the SAME denominator
+       * Guaranteed to require either simplification or extracting whole part!
+       */
+      genSameDen(diff = 'standard') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        const op = Rand.chance(0.55) ? '+' : '-';
+        let d, a, b;
+
+        for (let tries = 0; tries < 200; tries++) {
+          d = Rand.pick(cfg.sameDens);
+          if (op === '+') {
+            a = Rand.int(2, d - 1);
+            b = Rand.int(2, d - 1);
+            const s = a + b;
+            // Require extracting whole part OR reduction
+            if (s > d || MathFrac.gcd(s, d) > 1) break;
+          } else {
+            a = Rand.int(3, d - 1);
+            b = Rand.int(1, a - 1);
+            const r = a - b;
+            // Require reduction so student practices simplifying
+            if (r > 0 && MathFrac.gcd(r, d) > 1) break;
+          }
+        }
+
+        const { ans, steps } = buildFractionOpSteps(0, a, d, 0, b, d, op);
+        const exprHtml = `${MathFrac.htmlFrac(a, d)} <span class="math-op">${op === '+' ? '+' : '−'}</span> ${MathFrac.htmlFrac(b, d)}`;
+
+        const rawRes = op === '+' ? a + b : a - b;
+        const hints = [
+          `Знаменатели одинаковые (${d}), поэтому просто ${op === '+' ? 'сложи' : 'вычти'} числители, а знаменатель оставь прежним.`,
+          rawRes >= d
+            ? `Получится неправильная дробь — не забудь выделить целую часть и проверить, сокращается ли дробь!`
+            : `После вычисления проверь, на какое число (НОД) можно сократить числитель и знаменатель.`
+        ];
+
+        return {
+          type: 'fraction',
+          goal: '5.1.2.17',
+          topicName: 'Одинаковые знаменатели',
+          instruction: 'Вычислите (сократите дробь и при необходимости выделите целую часть):',
+          exprHtml,
+          answer: ans,
+          hints,
+          steps
+        };
+      },
+
+      /**
+       * 5.1.2.18 — Addition/subtraction of fractions with DIFFERENT denominators
+       */
+      genDiffDen(diff = 'standard') {
+        const op = Rand.chance(0.55) ? '+' : '-';
+        let d1, d2, L, a, b;
+
+        for (let tries = 0; tries < 200; tries++) {
+          [d1, d2, L] = pickDenPair(diff);
+          a = pickReducedNum(d1);
+          b = pickReducedNum(d2);
+          if (op === '+') {
+            break;
+          } else {
+            if (a * d2 > b * d1) break;
+          }
+        }
+
+        // Safety fallback for subtraction
+        if (op === '-' && a * d2 <= b * d1) {
+          const td = d1; d1 = d2; d2 = td;
+          const ta = a; a = b; b = ta;
+        }
+
+        const { ans, steps } = buildFractionOpSteps(0, a, d1, 0, b, d2, op);
+        const exprHtml = `${MathFrac.htmlFrac(a, d1)} <span class="math-op">${op === '+' ? '+' : '−'}</span> ${MathFrac.htmlFrac(b, d2)}`;
+        const m1 = L / d1;
+        const m2 = L / d2;
+
+        return {
+          type: 'fraction',
+          goal: '5.1.2.18',
+          topicName: 'Разные знаменатели',
+          instruction: 'Вычислите значение выражения:',
+          exprHtml,
+          answer: ans,
+          hints: [
+            `Найди наименьший общий знаменатель: НОК(${d1}, ${d2}) = ${L}.`,
+            `Дополнительные множители: ${m1} для первой дроби и ${m2} для второй. После действия проверь сокращение и целую часть.`
+          ],
+          steps
+        };
+      },
+
+      /**
+       * 5.1.2.19 — Subtracting a fraction OR mixed number from a natural number
+       */
+      genSubFromNatural(diff = 'standard', mode = 'auto') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        const isMixedSub = mode === 'mixed' ? true : (mode === 'proper' ? false : Rand.chance(0.55));
+        const d = Rand.pick(cfg.dens.filter(x => x >= 3));
+        const a = pickReducedNum(d);
+
+        if (!isMixedSub) {
+          // N - a/d
+          const N = Rand.int(2, cfg.maxWhole);
+          const ans = MathFrac.sub({ n: N, d: 1 }, { n: a, d });
+          const exprHtml = `<span class="whole-part">${N}</span> <span class="math-op">−</span> ${MathFrac.htmlFrac(a, d)}`;
+          const steps = [
+            `Представим натуральное число ${N} в виде смешанного числа со знаменателем ${d}: ` +
+            `${N} = ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(N - 1, d, d))}.`,
+            `Вычтем дробь из дробной части: ` +
+            `${MathFrac.htmlInline(MathFrac.htmlMixedRaw(N - 1, d, d))} − ${MathFrac.htmlInline(MathFrac.htmlFrac(a, d))} = ` +
+            `<strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+          ];
+          return {
+            type: 'fraction',
+            goal: '5.1.2.19',
+            topicName: 'Вычитание из натурального числа',
+            instruction: 'Выполните вычитание дроби из натурального числа:',
+            exprHtml,
+            answer: ans,
+            hints: [
+              `«Займи» единицу у числа ${N} и запиши её в виде дроби со знаменателем ${d}: ${N} = ${N - 1} + ${d}/${d}.`,
+              `Вычти числитель ${a} из ${d}, а целую часть ${N - 1} оставь без изменений.`
+            ],
+            steps
+          };
+        } else {
+          // N - W a/d
+          const W = Rand.int(1, Math.max(2, cfg.maxWhole - 3));
+          const N = W + Rand.int(1, Math.min(7, cfg.maxWhole - W + 1));
+          const ans = MathFrac.sub({ n: N, d: 1 }, MathFrac.fromMixed(W, a, d));
+          const exprHtml = `<span class="whole-part">${N}</span> <span class="math-op">−</span> ${MathFrac.htmlMixedRaw(W, a, d)}`;
+          const remW = (N - 1) - W;
+          const steps = [
+            `Представим натуральное число ${N} как ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(N - 1, d, d))}.`,
+            `Вычтем отдельно целые части (${N - 1} − ${W} = ${remW}) и дробные части (${MathFrac.htmlInline(MathFrac.htmlFrac(d, d))} − ${MathFrac.htmlInline(MathFrac.htmlFrac(a, d))} = ${MathFrac.htmlInline(MathFrac.htmlFrac(d - a, d))}).`,
+            `Ответ: <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(ans))}</strong>.`
+          ];
+          return {
+            type: 'fraction',
+            goal: '5.1.2.19',
+            topicName: 'Вычитание из натурального числа',
+            instruction: 'Выполните вычитание смешанного числа из натурального числа:',
+            exprHtml,
+            answer: ans,
+            hints: [
+              `Представь ${N} в виде смешанного числа: ${N - 1} целых и дробь ${d}/${d}.`,
+              `Теперь отдельно вычти целые части (${N - 1} − ${W}) и дробные части (${d}/${d} − ${a}/${d}).`
+            ],
+            steps
+          };
+        }
+      },
+
+      /**
+       * 5.1.2.20 — Addition of mixed numbers with different denominators & carrying (> 1)
+       */
+      genMixedAddCarry(diff = 'standard') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        let d1, d2, L, a, b;
+
+        for (let tries = 0; tries < 250; tries++) {
+          [d1, d2, L] = pickDenPair(diff);
+          a = pickReducedNum(d1, Math.ceil(d1 / 2), d1 - 1);
+          b = pickReducedNum(d2, Math.ceil(d2 / 2), d2 - 1);
+          // Guarantee sum of fractional parts > 1 (improper fraction!)
+          if (a * d2 + b * d1 > d1 * d2) break;
+        }
+
+        const w1 = Rand.int(1, Math.max(3, Math.floor(cfg.maxWhole * 0.7)));
+        const w2 = Rand.int(1, Math.max(3, Math.floor(cfg.maxWhole * 0.7)));
+        const { ans, steps } = buildFractionOpSteps(w1, a, d1, w2, b, d2, '+');
+        const exprHtml = `${MathFrac.htmlMixedRaw(w1, a, d1)} <span class="math-op">+</span> ${MathFrac.htmlMixedRaw(w2, b, d2)}`;
+
+        return {
+          type: 'fraction',
+          goal: '5.1.2.20',
+          topicName: 'Смешанные числа (сложение)',
+          instruction: 'Вычислите сумму смешанных чисел:',
+          exprHtml,
+          answer: ans,
+          hints: [
+            `Приведи дробные части к общему знаменателю НОК(${d1}, ${d2}) = ${L}.`,
+            `Сложи отдельно целые части и дробные части. В дробной части получится неправильная дробь — выдели из неё целую часть и прибавь к сумме целых!`
+          ],
+          steps
+        };
+      },
+
+      /**
+       * 5.1.2.20 — Subtraction of mixed numbers with different denominators & borrowing
+       */
+      genMixedSubBorrow(diff = 'standard') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        let d1, d2, L, a, b;
+
+        for (let tries = 0; tries < 250; tries++) {
+          [d1, d2, L] = pickDenPair(diff);
+          a = pickReducedNum(d1, 1, Math.max(1, Math.floor(d1 / 2)));
+          b = pickReducedNum(d2, Math.ceil(d2 / 2), d2 - 1);
+          // Guarantee minuend fractional part < subtrahend fractional part (borrowing required!)
+          if (a * d2 < b * d1) break;
+        }
+
+        const w2 = Rand.int(1, Math.max(2, Math.floor(cfg.maxWhole * 0.55)));
+        const w1 = w2 + Rand.int(1, Math.max(2, Math.floor(cfg.maxWhole * 0.45)));
+        const { ans, steps } = buildFractionOpSteps(w1, a, d1, w2, b, d2, '-');
+        const exprHtml = `${MathFrac.htmlMixedRaw(w1, a, d1)} <span class="math-op">−</span> ${MathFrac.htmlMixedRaw(w2, b, d2)}`;
+
+        return {
+          type: 'fraction',
+          goal: '5.1.2.20',
+          topicName: 'Смешанные числа (вычитание)',
+          instruction: 'Вычислите разность смешанных чисел:',
+          exprHtml,
+          answer: ans,
+          hints: [
+            `Приведи дробные части к общему знаменателю НОК(${d1}, ${d2}) = ${L}.`,
+            `Первая дробная часть окажется меньше второй — «займи» 1 у целой части ${w1}, прибавив ${L} к числителю первой дроби.`
+          ],
+          steps
+        };
+      },
+
+      /**
+       * 5.1.2.18, 5.1.2.20 — 2-step practical Word Problem (5 varied contexts)
+       */
+      genWordProblem(diff = 'standard') {
+        const scenario = Rand.int(0, 4);
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+
+        // Pattern A (scenarios 0, 1): Part 1 = A; Part 2 = A ± B; Find total (Part 1 + Part 2)
+        // Pattern B (scenarios 2, 3, 4): Total = T; Used/Part1 = A, Part2 = B; Find remaining T - (A + B)
+        if (scenario <= 1) {
+          const [d1, d2] = pickDenPair(diff);
+          const isMore = Rand.chance(0.5);
+          const aNum = pickReducedNum(d1);
+          const bNum = pickReducedNum(d2);
+          let wA = Rand.int(3, Math.min(12, cfg.maxWhole));
+          let wB = Rand.int(1, Math.max(2, wA - 2));
+          if (!isMore && wB >= wA) wB = 1;
+
+          const fA = MathFrac.fromMixed(wA, aNum, d1);
+          const fB = MathFrac.fromMixed(wB, bNum, d2);
+          const part2 = isMore ? MathFrac.add(fA, fB) : MathFrac.sub(fA, fB);
+          const total = MathFrac.add(fA, part2);
+
+          const m2 = MathFrac.toMixed(part2);
+          const step1Calc = buildFractionOpSteps(wA, aNum, d1, wB, bNum, d2, isMore ? '+' : '-');
+          const step2Calc = buildFractionOpSteps(wA, aNum, d1, m2.whole, m2.num, m2.den, '+');
+
+          const Ahtml = MathFrac.htmlInline(MathFrac.htmlMixedRaw(wA, aNum, d1));
+          const Bhtml = MathFrac.htmlInline(MathFrac.htmlMixedRaw(wB, bNum, d2));
+          const cmpWord = isMore ? 'больше' : 'меньше';
+
+          let text, unit, s1Title, s2Title;
+          if (scenario === 0) {
+            unit = 'км';
+            text = `Во время горного похода в первый день туристы прошли ${Ahtml} км, а во второй день — на ${Bhtml} км ${cmpWord}, чем в первый. Сколько всего километров прошли туристы за два дня?`;
+            s1Title = `<strong>1-е действие:</strong> найдём путь во второй день (${isMore ? 'сложение' : 'вычитание'}):`;
+            s2Title = `<strong>2-е действие:</strong> найдём весь путь за два дня:`;
+          } else {
+            unit = 'т';
+            text = `С первого поля фермеры собрали ${Ahtml} т пшеницы, а со второго поля — на ${Bhtml} т ${cmpWord}. Сколько всего тонн пшеницы собрали с двух полей?`;
+            s1Title = `<strong>1-е действие:</strong> найдём урожай со второго поля:`;
+            s2Title = `<strong>2-е действие:</strong> найдём общий урожай с двух полей:`;
+          }
+
+          const steps = [
+            s1Title,
+            ...step1Calc.steps,
+            s2Title,
+            ...step2Calc.steps,
+            `<strong>Ответ:</strong> ${MathFrac.htmlInline(MathFrac.htmlCanonical(total))} ${unit}.`
+          ];
+
+          return {
+            type: 'word',
+            goal: '5.1.2.18, 5.1.2.20',
+            topicName: 'Текстовая задача',
+            instruction: 'Решите текстовую задачу в два действия и запишите ответ:',
+            problemText: text,
+            unit,
+            answer: total,
+            hints: [
+              `Задача решается в 2 действия. Сначала найди величину во второй день/со второго поля (действие: ${isMore ? 'сложение' : 'вычитание'}).`,
+              `Затем сложи результат первого действия с известной величиной из условия (${MathFrac.textCanonical(fA)} ${unit}).`
+            ],
+            steps
+          };
+        } else {
+          // Pattern B: Total T - (A + B)
+          const [d1, d2] = pickDenPair(diff);
+          const aNum = pickReducedNum(d1);
+          const bNum = pickReducedNum(d2);
+          const wA = Rand.int(2, Math.min(8, cfg.maxWhole));
+          const wB = Rand.int(1, Math.min(7, cfg.maxWhole));
+          const fA = MathFrac.fromMixed(wA, aNum, d1);
+          const fB = MathFrac.fromMixed(wB, bNum, d2);
+          const sumAB = MathFrac.add(fA, fB);
+          const mSum = MathFrac.toMixed(sumAB);
+
+          // Choose Total T strictly larger than sumAB (sometimes integer, sometimes mixed!)
+          const dT = Rand.pick([d1, d2, MathFrac.lcm(d1, d2) <= 24 ? MathFrac.lcm(d1, d2) : d1]);
+          const useWholeT = Rand.chance(0.45);
+          const wT = mSum.whole + Rand.int(2, 6);
+          const tNum = useWholeT ? 0 : pickReducedNum(dT);
+          const fT = useWholeT ? { n: wT, d: 1 } : MathFrac.fromMixed(wT, tNum, dT);
+          const rem = MathFrac.sub(fT, sumAB);
+
+          const step1Calc = buildFractionOpSteps(wA, aNum, d1, wB, bNum, d2, '+');
+          let step2Steps;
+          if (useWholeT) {
+            const subW = mSum.whole;
+            const subN = mSum.num;
+            const subD = mSum.den;
+            if (subN === 0) {
+              step2Steps = [`${wT} − ${subW} = <strong>${wT - subW}</strong>.`];
+            } else {
+              step2Steps = [
+                `Представим ${wT} как ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(wT - 1, subD, subD))}.`,
+                `Вычтем: ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(wT - 1, subD, subD))} − ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(subW, subN, subD))} = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(rem))}</strong>.`
+              ];
+            }
+          } else {
+            step2Steps = buildFractionOpSteps(wT, tNum, dT, mSum.whole, mSum.num, mSum.den, '-').steps;
+          }
+
+          const Thtml = MathFrac.htmlInline(MathFrac.htmlMixedRaw(wT, tNum, useWholeT ? 1 : dT));
+          const Ahtml = MathFrac.htmlInline(MathFrac.htmlMixedRaw(wA, aNum, d1));
+          const Bhtml = MathFrac.htmlInline(MathFrac.htmlMixedRaw(wB, bNum, d2));
+
+          let text, unit, s1Title, s2Title;
+          if (scenario === 2) {
+            unit = 'л';
+            text = `В рамках акции «Мөлдір бұлақ» в школьном баке для капельного полива было ${Thtml} л дождевой воды. Утром израсходовали ${Ahtml} л, а вечером — ${Bhtml} л. Сколько литров воды осталось в баке?`;
+            s1Title = `<strong>1-е действие:</strong> найдём, сколько всего воды израсходовали за день:`;
+            s2Title = `<strong>2-е действие:</strong> найдём, сколько воды осталось в баке:`;
+          } else if (scenario === 3) {
+            unit = 'кг';
+            text = `В трёх ящиках всего ${Thtml} кг яблок. В первом ящике ${Ahtml} кг, а во втором — ${Bhtml} кг. Найдите массу яблок в третьем ящике.`;
+            s1Title = `<strong>1-е действие:</strong> найдём массу яблок в первом и втором ящиках вместе:`;
+            s2Title = `<strong>2-е действие:</strong> найдём массу яблок в третьем ящике:`;
+          } else {
+            unit = 'м';
+            text = `От мотка декоративной ленты длиной ${Thtml} м сначала отрезали ${Ahtml} м, а затем ещё ${Bhtml} м. Сколько метров ленты осталось в мотке?`;
+            s1Title = `<strong>1-е действие:</strong> найдём общую длину отрезанной ленты:`;
+            s2Title = `<strong>2-е действие:</strong> найдём длину оставшейся ленты:`;
+          }
+
+          const steps = [
+            s1Title,
+            ...step1Calc.steps,
+            s2Title,
+            ...step2Steps,
+            `<strong>Ответ:</strong> ${MathFrac.htmlInline(MathFrac.htmlCanonical(rem))} ${unit}.`
+          ];
+
+          return {
+            type: 'word',
+            goal: '5.1.2.18, 5.1.2.20',
+            topicName: 'Текстовая задача',
+            instruction: 'Решите текстовую задачу в два действия и запишите ответ:',
+            problemText: text,
+            unit,
+            answer: rem,
+            hints: [
+              `Сначала найди, сколько всего составляет сумма двух известных частей (действие: сложение).`,
+              `Затем вычти полученную сумму из общего количества (${MathFrac.textCanonical(fT)} ${unit}).`
+            ],
+            steps
+          };
+        }
+      },
+
+      /**
+       * 5.1.2.18, 5.1.2.20 — 2-step Equation with mixed numbers
+       */
+      genEquation(diff = 'standard') {
+        const cfg = DIFF_CONFIG[diff] || DIFF_CONFIG.standard;
+        const form = Rand.int(0, 2);
+        const [d1, d2] = pickDenPair(diff);
+
+        // Generate root x and parameters A, B first to guarantee positive clean numbers everywhere!
+        const wX = Rand.int(2, Math.min(8, cfg.maxWhole));
+        const nX = pickReducedNum(d1);
+        const fX = MathFrac.fromMixed(wX, nX, d1);
+
+        const wA = Rand.int(1, 5);
+        const nA = pickReducedNum(d2);
+        const fA = MathFrac.fromMixed(wA, nA, d2);
+
+        const wB = Rand.int(1, 4);
+        const d3 = Rand.pick([d1, d2]);
+        const nB = pickReducedNum(d3);
+        const fB = MathFrac.fromMixed(wB, nB, d3);
+
+        let exprHtml, steps, hints;
+
+        if (form === 0) {
+          // (x + A) - B = C, where C = (x + A) - B (guaranteed > 0 since x >= 2, A >= 1, let's ensure x + A > B)
+          const sumXA = MathFrac.add(fX, fA);
+          const fBAdj = MathFrac.compare(sumXA, fB) === '>' ? fB : MathFrac.fromMixed(1, 1, d3);
+          const fC = MathFrac.sub(sumXA, fBAdj);
+          const mC = MathFrac.toMixed(fC);
+          const mB = MathFrac.toMixed(fBAdj);
+          const mSum = MathFrac.toMixed(sumXA);
+
+          exprHtml = `<span class="math-paren">(</span><span class="math-var">x</span> <span class="math-op">+</span> ${MathFrac.htmlMixedRaw(wA, nA, d2)}<span class="math-paren">)</span> <span class="math-op">−</span> ${MathFrac.htmlMixedRaw(mB.whole, mB.num, mB.den)} <span class="math-op">=</span> ${MathFrac.htmlCanonical(fC)}`;
+
+          const s1 = buildFractionOpSteps(mC.whole, mC.num, mC.den, mB.whole, mB.num, mB.den, '+');
+          const s2 = buildFractionOpSteps(mSum.whole, mSum.num, mSum.den, wA, nA, d2, '-');
+
+          steps = [
+            `<strong>Шаг 1:</strong> найдём неизвестное уменьшаемое <span class="math-var">x</span> + ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(wA, nA, d2))}, прибавив вычитаемое к разности:`,
+            ...s1.steps,
+            `<strong>Шаг 2:</strong> найдём неизвестное слагаемое <span class="math-var">x</span>, вычтя ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(wA, nA, d2))} из суммы:`,
+            ...s2.steps,
+            `<strong>Ответ:</strong> <span class="math-var">x</span> = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(fX))}</strong>.`
+          ];
+          hints = [
+            `Рассматривай скобку (x + ${MathFrac.textCanonical(fA)}) как неизвестное уменьшаемое. Чтобы его найти, сложи разность и вычитаемое.`,
+            `После первого действия получится простое уравнение вида x + A = S. Найди x вычитанием!`
+          ];
+        } else if (form === 1) {
+          // (x - A) + B = C, ensure x > A
+          const fAAdj = MathFrac.compare(fX, fA) === '>' ? fA : MathFrac.fromMixed(1, pickReducedNum(d2), d2);
+          const diffXA = MathFrac.sub(fX, fAAdj);
+          const fC = MathFrac.add(diffXA, fB);
+          const mC = MathFrac.toMixed(fC);
+          const mA = MathFrac.toMixed(fAAdj);
+          const mDiff = MathFrac.toMixed(diffXA);
+
+          exprHtml = `<span class="math-paren">(</span><span class="math-var">x</span> <span class="math-op">−</span> ${MathFrac.htmlMixedRaw(mA.whole, mA.num, mA.den)}<span class="math-paren">)</span> <span class="math-op">+</span> ${MathFrac.htmlMixedRaw(wB, nB, d3)} <span class="math-op">=</span> ${MathFrac.htmlCanonical(fC)}`;
+
+          const s1 = buildFractionOpSteps(mC.whole, mC.num, mC.den, wB, nB, d3, '-');
+          const s2 = buildFractionOpSteps(mDiff.whole, mDiff.num, mDiff.den, mA.whole, mA.num, mA.den, '+');
+
+          steps = [
+            `<strong>Шаг 1:</strong> найдём неизвестное слагаемое <span class="math-var">x</span> − ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(mA.whole, mA.num, mA.den))}, вычтя второе слагаемое из суммы:`,
+            ...s1.steps,
+            `<strong>Шаг 2:</strong> найдём неизвестное уменьшаемое <span class="math-var">x</span>, сложив разность и вычитаемое:`,
+            ...s2.steps,
+            `<strong>Ответ:</strong> <span class="math-var">x</span> = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(fX))}</strong>.`
+          ];
+          hints = [
+            `Сначала найди значение скобки (x − ${MathFrac.textCanonical(fAAdj)}) как неизвестного слагаемого (вычитанием).`,
+            `Затем найди x как неизвестное уменьшаемое (прибавь вычитаемое к полученному результату).`
+          ];
+        } else {
+          // Total - (x + B) = C  =>  x + B = Total - C  =>  x = (Total - C) - B
+          const sumXB = MathFrac.add(fX, fB);
+          const wC = Rand.int(1, 4);
+          const nC = pickReducedNum(d2);
+          const fC = MathFrac.fromMixed(wC, nC, d2);
+          const fTotal = MathFrac.add(sumXB, fC);
+          const mT = MathFrac.toMixed(fTotal);
+          const mSum = MathFrac.toMixed(sumXB);
+
+          exprHtml = `${MathFrac.htmlCanonical(fTotal)} <span class="math-op">−</span> <span class="math-paren">(</span><span class="math-var">x</span> <span class="math-op">+</span> ${MathFrac.htmlMixedRaw(wB, nB, d3)}<span class="math-paren">)</span> <span class="math-op">=</span> ${MathFrac.htmlMixedRaw(wC, nC, d2)}`;
+
+          const s1 = buildFractionOpSteps(mT.whole, mT.num, mT.den, wC, nC, d2, '-');
+          const s2 = buildFractionOpSteps(mSum.whole, mSum.num, mSum.den, wB, nB, d3, '-');
+
+          steps = [
+            `<strong>Шаг 1:</strong> найдём неизвестное вычитаемое <span class="math-var">x</span> + ${MathFrac.htmlInline(MathFrac.htmlMixedRaw(wB, nB, d3))}, вычтя разность из уменьшаемого:`,
+            ...s1.steps,
+            `<strong>Шаг 2:</strong> найдём неизвестное слагаемое <span class="math-var">x</span>:`,
+            ...s2.steps,
+            `<strong>Ответ:</strong> <span class="math-var">x</span> = <strong>${MathFrac.htmlInline(MathFrac.htmlCanonical(fX))}</strong>.`
+          ];
+          hints = [
+            `Скобка (x + ${MathFrac.textCanonical(fB)}) является неизвестным вычитаемым. Чтобы её найти, вычти разность из уменьшаемого.`,
+            `Затем найди неизвестное слагаемое x с помощью вычитания.`
+          ];
+        }
+
+        return {
+          type: 'equation',
+          goal: '5.1.2.18, 5.1.2.20',
+          topicName: 'Уравнение со смешанными числами',
+          instruction: 'Решите уравнение и найдите значение x:',
+          exprHtml,
+          answer: fX,
+          hints,
+          steps
+        };
+      }
+    };
+
+    /* ==========================================================================
+       4. SMART FRACTION INPUT WIDGET & CHECKER
+       ========================================================================== */
+    const InputWidget = {
+      /** Create HTML string for the 3-field fraction input widget */
+      renderHTML(idPrefix, onEnterCall = '') {
+        const roAttr = (typeof VirtualKeypad !== 'undefined' && VirtualKeypad.enabled) ? 'readonly="readonly" inputmode="none"' : 'inputmode="numeric"';
+        return `
+          <div class="frac-input-wrap" id="${idPrefix}-wrap">
+            <input
+              type="text"
+              ${roAttr}
+              autocomplete="off"
+              class="fi-whole"
+              id="${idPrefix}-whole"
+              placeholder="цел."
+              aria-label="Целая часть"
+              data-role="whole"
+              data-prefix="${idPrefix}"
+              data-enter="${onEnterCall}"
+            >
+            <div class="fi-stack">
+              <input
+                type="text"
+                ${roAttr}
+                autocomplete="off"
+                class="fi-num"
+                id="${idPrefix}-num"
+                placeholder="числ."
+                aria-label="Числитель"
+                data-role="num"
+                data-prefix="${idPrefix}"
+                data-enter="${onEnterCall}"
+              >
+              <div class="fi-bar" aria-hidden="true"></div>
+              <input
+                type="text"
+                ${roAttr}
+                autocomplete="off"
+                class="fi-den"
+                id="${idPrefix}-den"
+                placeholder="знам."
+                aria-label="Знаменатель"
+                data-role="den"
+                data-prefix="${idPrefix}"
+                data-enter="${onEnterCall}"
+              >
+            </div>
+          </div>
+        `;
+      },
+
+      /** Attach global delegated keyboard & sanitization handlers once */
+      initGlobalListeners() {
+        document.addEventListener('input', (e) => {
+          const el = e.target;
+          if (!el.dataset || !el.dataset.prefix) return;
+          // Keep digits only (max 4 digits)
+          el.value = el.value.replace(/[^0-9]/g, '').slice(0, 4);
+          // Clear previous visual highlight while user edits
+          const wrap = document.getElementById(`${el.dataset.prefix}-wrap`);
+          if (wrap) wrap.classList.remove('state-correct', 'state-almost', 'state-wrong');
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            closeResetModal();
+          }
+          const el = e.target;
+          if (!el.dataset || !el.dataset.prefix) return;
+          const p = el.dataset.prefix;
+          const role = el.dataset.role;
+
+          // Allow physical keyboard digits & Backspace even when readonly prevents mobile OS keyboard
+          if (el.hasAttribute('readonly')) {
+            if (/^[0-9]$/.test(e.key)) {
+              e.preventDefault();
+              VirtualKeypad.pressDigit(e.key);
+              return;
+            }
+            if (e.key === 'Backspace') {
+              e.preventDefault();
+              VirtualKeypad.pressBackspace();
+              return;
+            }
+          }
+
+          const wholeEl = document.getElementById(`${p}-whole`);
+          const numEl = document.getElementById(`${p}-num`);
+          const denEl = document.getElementById(`${p}-den`);
+
+          if (e.key === 'Enter' && el.dataset.enter) {
+            e.preventDefault();
+            if (el.dataset.enter === 'trainer') Trainer.check();
+            return;
+          }
+
+          if (role === 'whole') {
+            if (e.key === ' ' || e.key === 'ArrowRight') {
+              if (e.key === ' ' || el.selectionStart === el.value.length) {
+                e.preventDefault();
+                numEl && numEl.focus();
+              }
+            }
+          } else if (role === 'num') {
+            if (e.key === '/' || e.key === 'ArrowDown') {
+              e.preventDefault();
+              denEl && denEl.focus();
+            } else if (e.key === 'ArrowLeft' && el.selectionStart === 0) {
+              e.preventDefault();
+              wholeEl && wholeEl.focus();
+            }
+          } else if (role === 'den') {
+            if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              numEl && numEl.focus();
+            } else if (e.key === 'ArrowLeft' && el.selectionStart === 0) {
+              e.preventDefault();
+              wholeEl && wholeEl.focus();
+            }
+          }
+        });
+      },
+
+      /**
+       * Read and intelligently evaluate user's fraction answer against canonical {n, d}
+       * Returns: { status: 'empty'|'invalid'|'wrong'|'almost'|'correct', message: string }
+       */
+      evaluate(idPrefix, canonicalAns) {
+        const wRaw = (document.getElementById(`${idPrefix}-whole`)?.value || '').trim();
+        const nRaw = (document.getElementById(`${idPrefix}-num`)?.value || '').trim();
+        const dRaw = (document.getElementById(`${idPrefix}-den`)?.value || '').trim();
+
+        if (!wRaw && !nRaw && !dRaw) {
+          return { status: 'empty', message: 'Ответ не введён.' };
+        }
+
+        if ((nRaw && !dRaw) || (!nRaw && dRaw)) {
+          return { status: 'invalid', message: 'Заполните и числитель, и знаменатель дроби (или оставьте оба поля пустыми для целого числа).' };
+        }
+
+        const w = wRaw ? parseInt(wRaw, 10) : 0;
+        const n = nRaw ? parseInt(nRaw, 10) : 0;
+        const d = dRaw ? parseInt(dRaw, 10) : 1;
+
+        if (dRaw && d === 0) {
+          return { status: 'invalid', message: 'Знаменатель не может быть равен 0!' };
+        }
+
+        const userTotalN = w * d + n;
+        const userD = d;
+
+        // Exact cross-multiplication check
+        const isMathEqual = (userTotalN * canonicalAns.d === canonicalAns.n * userD);
+        if (!isMathEqual) {
+          return { status: 'wrong', message: 'Ответ неверный. Проверь вычисления и посмотри пошаговое решение.' };
+        }
+
+        // Value is mathematically equal! Now verify canonical mixed reduced form.
+        if (canonicalAns.d === 1) {
+          // Answer is a pure integer
+          if (nRaw !== '' || dRaw !== '') {
+            return {
+              status: 'almost',
+              message: 'Значение верное, но нужно выделить целую часть (ответ — целое число, оставь поля дроби пустыми)! Попробуй довести до конца.'
+            };
+          }
+          return { status: 'correct', message: 'Верно! Отличная работа!' };
+        }
+
+        // Answer has a proper reduced fractional part
+        const needsWhole = (n >= d);
+        const needsReduce = (n > 0 && MathFrac.gcd(n, d) > 1);
+        const redundantZeroWhole = (wRaw !== '' && w === 0 && canonicalAns.n < canonicalAns.d);
+
+        if (needsWhole && needsReduce) {
+          return {
+            status: 'almost',
+            message: 'Значение верное, но нужно выделить целую часть и сократить дробь! Попробуй довести до конца.'
+          };
+        }
+        if (needsWhole) {
+          return {
+            status: 'almost',
+            message: 'Значение верное, но нужно выделить целую часть из неправильной дроби! Попробуй довести до конца.'
+          };
+        }
+        if (needsReduce) {
+          return {
+            status: 'almost',
+            message: 'Значение верное, но нужно сократить дробь! Попробуй довести до конца.'
+          };
+        }
+        if (redundantZeroWhole) {
+          // Accept gracefully as correct, though clean form leaves whole blank
+          return { status: 'correct', message: 'Верно! (Для правильной дроби поле целой части можно оставлять пустым.)' };
+        }
+
+        return { status: 'correct', message: 'Верно! Отличная работа!' };
+      },
+
+      /** Apply visual state to wrapper */
+      setVisualState(idPrefix, status) {
+        const wrap = document.getElementById(`${idPrefix}-wrap`);
+        if (!wrap) return;
+        wrap.classList.remove('state-correct', 'state-almost', 'state-wrong');
+        if (status === 'correct') wrap.classList.add('state-correct');
+        else if (status === 'almost') wrap.classList.add('state-almost');
+        else if (status === 'wrong' || status === 'empty' || status === 'invalid') wrap.classList.add('state-wrong');
+      }
+    };
+
+
+    /* ==========================================================================
+       4B. COMPACT BUILT-IN VIRTUAL KEYBOARD CONTROLLER
+       ========================================================================== */
+    const VirtualKeypad = {
+      enabled: false,
+      visible: false,
+      activeInput: null,
+      lastInput: null,
+
+      init() {
+        // Enable automatically on touch/mobile viewports so OS keyboard never blocks half the screen
+        const isTouchOrSmall = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 820;
+        this.enabled = isTouchOrSmall;
+        this.syncInputAttributes();
+        this.updateToggleUI();
+
+        document.addEventListener('focusin', (e) => {
+          const el = e.target;
+          if (el && el.dataset && el.dataset.prefix && el.dataset.role) {
+            this.setActiveInput(el, true);
+          }
+        });
+
+        // Prevent native keyboard popup when built-in keypad is enabled
+        document.addEventListener('touchstart', (e) => {
+          const el = e.target;
+          if (this.enabled && el && el.dataset && el.dataset.prefix && el.dataset.role) {
+            el.setAttribute('readonly', 'readonly');
+            el.setAttribute('inputmode', 'none');
+            el.focus();
+            this.setActiveInput(el, true);
+          }
+        }, { passive: true });
+      },
+
+      toggleEnabled() {
+        this.enabled = !this.enabled;
+        this.syncInputAttributes();
+        this.updateToggleUI();
+        if (!this.enabled) {
+          this.hide();
+          document.getElementById('vk-fab').classList.add('hidden');
+          showToast('Встроенная мини-клавиатура выключена');
+        } else {
+          showToast('Встроенная мини-клавиатура включена');
+          if (this.activeInput && document.body.contains(this.activeInput)) {
+            this.show();
+          } else {
+            document.getElementById('vk-fab').classList.remove('hidden');
+          }
+        }
+      },
+
+      updateToggleUI() {
+        const btn = document.getElementById('vk-mode-toggle');
+        const lbl = document.getElementById('vk-mode-label');
+        if (!btn || !lbl) return;
+        btn.classList.toggle('active', this.enabled);
+        lbl.textContent = this.enabled ? 'ВКЛ' : 'ВЫКЛ';
+      },
+
+      syncInputAttributes() {
+        document.querySelectorAll('.fi-whole, .fi-num, .fi-den').forEach(inp => {
+          if (this.enabled) {
+            inp.setAttribute('readonly', 'readonly');
+            inp.setAttribute('inputmode', 'none');
+          } else {
+            inp.removeAttribute('readonly');
+            inp.setAttribute('inputmode', 'numeric');
+          }
+        });
+      },
+
+      setActiveInput(el, autoOpen = false) {
+        if (this.activeInput && this.activeInput !== el) {
+          this.activeInput.classList.remove('vk-active');
+        }
+        this.activeInput = el;
+        this.lastInput = el;
+        if (el) {
+          el.classList.add('vk-active');
+          this.updatePartHighlight(el.dataset.role);
+          if (this.enabled && autoOpen) {
+            this.show();
+            this.scrollInputIntoView(el);
+          }
+        }
+      },
+
+      updatePartHighlight(role) {
+        ['whole', 'num', 'den'].forEach(r => {
+          const btn = document.getElementById(`vk-part-${r}`);
+          if (btn) btn.classList.toggle('active', r === role);
+        });
+      },
+
+      show() {
+        if (!this.enabled) return;
+        const kp = document.getElementById('virtual-keypad');
+        const fab = document.getElementById('vk-fab');
+        if (kp) kp.classList.remove('vk-hidden');
+        if (fab) fab.classList.add('hidden');
+        document.body.classList.add('vk-open');
+        this.visible = true;
+      },
+
+      hide() {
+        const kp = document.getElementById('virtual-keypad');
+        const fab = document.getElementById('vk-fab');
+        if (kp) kp.classList.add('vk-hidden');
+        document.body.classList.remove('vk-open');
+        this.visible = false;
+        if (this.enabled) {
+          if (fab) fab.classList.remove('hidden');
+        }
+        if (this.activeInput) {
+          this.activeInput.classList.remove('vk-active');
+        }
+      },
+
+      showLastOrFirst() {
+        if (!this.enabled) return;
+        let target = this.lastInput && document.body.contains(this.lastInput) ? this.lastInput : null;
+        if (!target) {
+          const isSor = !document.getElementById('view-sor').classList.contains('hidden');
+          const scope = document.getElementById(isSor ? 'view-sor' : 'view-trainer');
+          target = scope ? scope.querySelector('.fi-whole') : null;
+        }
+        if (target) {
+          target.focus();
+          this.setActiveInput(target, true);
+        }
+      },
+
+      scrollInputIntoView(el) {
+        setTimeout(() => {
+          const rect = el.getBoundingClientRect();
+          const keypadHeight = 135;
+          const visibleBottom = window.innerHeight - keypadHeight;
+          if (rect.bottom > visibleBottom || rect.top < 75) {
+            const targetY = window.scrollY + rect.top - Math.max(95, (visibleBottom - 80) * 0.48);
+            window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+          }
+        }, 60);
+      },
+
+      switchPart(role) {
+        const cur = this.activeInput || this.lastInput;
+        if (!cur || !cur.dataset || !cur.dataset.prefix) return;
+        const target = document.getElementById(`${cur.dataset.prefix}-${role}`);
+        if (target) {
+          target.focus();
+          this.setActiveInput(target, true);
+        }
+      },
+
+      pressDigit(digit) {
+        const el = this.activeInput || this.lastInput;
+        if (!el || !document.body.contains(el)) return;
+        if (el.value.length < 4) {
+          el.value = (el.value + digit).replace(/[^0-9]/g, '').slice(0, 4);
+          const wrap = document.getElementById(`${el.dataset.prefix}-wrap`);
+          if (wrap) wrap.classList.remove('state-correct', 'state-almost', 'state-wrong');
+        }
+        el.focus();
+        this.setActiveInput(el, false);
+      },
+
+      pressBackspace() {
+        const el = this.activeInput || this.lastInput;
+        if (!el || !document.body.contains(el)) return;
+        if (el.value.length > 0) {
+          el.value = el.value.slice(0, -1);
+          const wrap = document.getElementById(`${el.dataset.prefix}-wrap`);
+          if (wrap) wrap.classList.remove('state-correct', 'state-almost', 'state-wrong');
+          el.focus();
+          this.setActiveInput(el, false);
+        } else {
+          // Step backward to previous field if current is empty: den -> num -> whole
+          const p = el.dataset.prefix;
+          const role = el.dataset.role;
+          const prevRole = role === 'den' ? 'num' : (role === 'num' ? 'whole' : null);
+          if (prevRole) {
+            const prevEl = document.getElementById(`${p}-${prevRole}`);
+            if (prevEl) {
+              prevEl.focus();
+              this.setActiveInput(prevEl, false);
+            }
+          }
+        }
+      },
+
+      pressDone() {
+        const isTrainer = !document.getElementById('view-trainer').classList.contains('hidden');
+        if (isTrainer) {
+          this.hide();
+          Trainer.check();
+          return;
+        }
+        // In SOR mode: advance to next unanswered fraction input, or scroll to Check button
+        const allInputs = Array.from(document.querySelectorAll('#view-sor .fi-whole'));
+        const cur = this.activeInput || this.lastInput;
+        const curPrefix = cur && cur.dataset ? cur.dataset.prefix : null;
+        let startIdx = curPrefix ? allInputs.findIndex(inp => inp.dataset.prefix === curPrefix) + 1 : 0;
+        if (startIdx < 0) startIdx = 0;
+
+        for (let i = startIdx; i < allInputs.length; i++) {
+          const p = allInputs[i].dataset.prefix;
+          const w = document.getElementById(`${p}-whole`)?.value;
+          const n = document.getElementById(`${p}-num`)?.value;
+          const d = document.getElementById(`${p}-den`)?.value;
+          if (!w && !n && !d) {
+            allInputs[i].focus();
+            this.setActiveInput(allInputs[i], true);
+            return;
+          }
+        }
+        this.hide();
+        document.getElementById('btn-check-sor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    /* ==========================================================================
+       5. STATS MANAGER (LOCALSTORAGE WITH TRY/CATCH)
+       ========================================================================== */
+    const STATS_KEY = 'sor4_math5_stats_v1';
+
+    const Stats = {
+      data: {
+        sorCompleted: 0,
+        sorBestScore: null,
+        sorBestPct: null,
+        trainerSolved: 0,
+        trainerAttempts: 0,
+        bestStreak: 0
+      },
+
+      load() {
+        try {
+          const raw = localStorage.getItem(STATS_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            this.data = Object.assign({}, this.data, parsed);
+          }
+        } catch (err) {
+          // Ignore storage errors in restricted environments
+        }
+        this.render();
+      },
+
+      save() {
+        try {
+          localStorage.setItem(STATS_KEY, JSON.stringify(this.data));
+        } catch (err) {
+          // Ignore storage errors
+        }
+        this.render();
+      },
+
+      recordSOR(score, maxScore) {
+        this.data.sorCompleted += 1;
+        const pct = Math.round((score / maxScore) * 100);
+        if (this.data.sorBestScore === null || score > this.data.sorBestScore) {
+          this.data.sorBestScore = score;
+          this.data.sorBestPct = pct;
+        }
+        this.save();
+      },
+
+      recordTrainer(isCorrect, currentStreak) {
+        this.data.trainerAttempts += 1;
+        if (isCorrect) this.data.trainerSolved += 1;
+        if (currentStreak > this.data.bestStreak) {
+          this.data.bestStreak = currentStreak;
+        }
+        this.save();
+      },
+
+      recordTrainerRetrySolved() {
+        this.data.trainerSolved += 1;
+        this.save();
+      },
+
+      reset() {
+        this.data = {
+          sorCompleted: 0,
+          sorBestScore: null,
+          sorBestPct: null,
+          trainerSolved: 0,
+          trainerAttempts: 0,
+          bestStreak: 0
+        };
+        this.save();
+      },
+
+      render() {
+        document.getElementById('stat-sor-count').textContent = this.data.sorCompleted;
+        const bestStr = this.data.sorBestScore !== null
+          ? (Number.isInteger(this.data.sorBestScore)
+              ? this.data.sorBestScore
+              : String(this.data.sorBestScore).replace('.', ','))
+          : null;
+        document.getElementById('stat-sor-best').textContent =
+          bestStr !== null
+            ? `${bestStr}/14 (${this.data.sorBestPct}%)`
+            : '—';
+        document.getElementById('stat-trainer-solved').textContent = this.data.trainerSolved;
+        document.getElementById('stat-best-streak').textContent = this.data.bestStreak;
+      }
+    };
+
+    /* ==========================================================================
+       6. OPTIONAL 20-MINUTE TIMER FOR SOR MODE
+       ========================================================================== */
+    const Timer = {
+      totalSeconds: 20 * 60,
+      remaining: 20 * 60,
+      intervalId: null,
+      running: false,
+
+      render() {
+        const mins = Math.floor(this.remaining / 60);
+        const secs = this.remaining % 60;
+        const el = document.getElementById('timer-display');
+        el.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        el.classList.toggle('low', this.remaining <= 180 && this.remaining > 0);
+        const btn = document.getElementById('timer-toggle-btn');
+        btn.textContent = this.running ? 'Пауза' : 'Старт';
+      },
+
+      toggle() {
+        if (this.running) {
+          this.pause();
+        } else {
+          if (this.remaining <= 0) this.remaining = this.totalSeconds;
+          this.running = true;
+          this.intervalId = setInterval(() => {
+            this.remaining -= 1;
+            if (this.remaining <= 0) {
+              this.remaining = 0;
+              this.pause();
+              showToast('⏱️ Время вышло! Можно проверить свою работу.');
+            }
+            this.render();
+          }, 1000);
+          this.render();
+        }
+      },
+
+      pause() {
+        this.running = false;
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+        this.render();
+      },
+
+      reset() {
+        this.pause();
+        this.remaining = this.totalSeconds;
+        this.render();
+      }
+    };
+
+    /* ==========================================================================
+       7. MODE 1: FULL SOR #4 CONTROLLER (5 TASKS, 14 POINTS)
+       ========================================================================== */
+    const SOR = {
+      variantNum: Rand.int(100, 999),
+      checked: false,
+      tasks: null,
+      cmpAnswers: { t1a: null, t1b: null },
+
+      generateNew() {
+        this.variantNum = Rand.int(100, 999);
+        this.checked = false;
+        this.cmpAnswers = { t1a: null, t1b: null };
+
+        // Generate all 5 tasks strictly matching the KTP & 14-point specification
+        const t1a = Generators.genCompareFractions('standard');
+        const t1b = Generators.genCompareMixed('standard');
+
+        const t2a = Generators.genSameDen('standard');
+        const t2b = Generators.genDiffDen('standard');
+
+        const t3a = Generators.genSubFromNatural('standard', 'proper');
+        const t3b = Generators.genSubFromNatural('standard', 'mixed');
+
+        const t4a = Generators.genMixedAddCarry('standard');
+        const t4b = Generators.genMixedSubBorrow('standard');
+
+        // Randomly alternate between 2-step Word Problem and 2-step Equation
+        const t5 = Rand.chance(0.58)
+          ? Generators.genWordProblem('standard')
+          : Generators.genEquation('standard');
+
+        this.tasks = { t1a, t1b, t2a, t2b, t3a, t3b, t4a, t4b, t5 };
+
+        document.getElementById('sor-variant-num').textContent = this.variantNum;
+        document.getElementById('print-variant-num').textContent = this.variantNum;
+        document.getElementById('sor-result-banner').classList.add('hidden');
+        document.getElementById('btn-check-sor').disabled = false;
+
+        Timer.reset();
+        this.renderTasks();
+        this.renderPrintAnswerKey();
+        if (typeof VirtualKeypad !== 'undefined') VirtualKeypad.syncInputAttributes();
+      },
+
+      selectCmp(itemKey, sign, btnEl) {
+        this.cmpAnswers[itemKey] = sign;
+        const group = document.getElementById(`cmp-${itemKey}`);
+        if (group) {
+          group.classList.remove('state-correct', 'state-wrong');
+          group.querySelectorAll('.cmp-btn').forEach(b => b.classList.remove('selected'));
+        }
+        btnEl.classList.add('selected');
+      },
+
+      renderCmpWidget(itemKey) {
+        return `
+          <span class="cmp-group" id="cmp-${itemKey}">
+            <button type="button" class="cmp-btn" onclick="SOR.selectCmp('${itemKey}', '<', this)" aria-label="Меньше">&lt;</button>
+            <button type="button" class="cmp-btn" onclick="SOR.selectCmp('${itemKey}', '=', this)" aria-label="Равно">=</button>
+            <button type="button" class="cmp-btn" onclick="SOR.selectCmp('${itemKey}', '>', this)" aria-label="Больше">&gt;</button>
+          </span>
+          <span class="print-cmp-circle" aria-hidden="true"></span>
+        `;
+      },
+
+      renderTasks() {
+        const t = this.tasks;
+        const container = document.getElementById('sor-tasks-container');
+
+        container.innerHTML = `
+          <!-- ЗАДАНИЕ 1 (2 балла, 5.1.2.16) -->
+          <article class="task-card" id="sor-card-1">
+            <div class="task-header">
+              <div class="task-title-wrap">
+                <span class="task-num-badge">Задание 1</span>
+                <span class="task-goal-badge">Цель 5.1.2.16</span>
+              </div>
+              <span class="task-points-badge" id="sor-pts-1">2 балла</span>
+            </div>
+            <div class="task-instruction">Сравните дроби и смешанные числа (выберите знак &lt;, = или &gt;):</div>
+            <div class="subitems-grid">
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">а)</span>
+                  <div class="math-expr">
+                    ${t.t1a.leftHtml}
+                    ${this.renderCmpWidget('t1a')}
+                    ${t.t1a.rightHtml}
+                  </div>
+                </div>
+                <div id="sor-fb-t1a"></div>
+                <div id="sor-sol-t1a"></div>
+              </div>
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">б)</span>
+                  <div class="math-expr">
+                    ${t.t1b.leftHtml}
+                    ${this.renderCmpWidget('t1b')}
+                    ${t.t1b.rightHtml}
+                  </div>
+                </div>
+                <div id="sor-fb-t1b"></div>
+                <div id="sor-sol-t1b"></div>
+              </div>
+            </div>
+            <div id="sor-desc-1"></div>
+          </article>
+
+          <!-- ЗАДАНИЕ 2 (2 балла, 5.1.2.17–5.1.2.18) -->
+          <article class="task-card" id="sor-card-2">
+            <div class="task-header">
+              <div class="task-title-wrap">
+                <span class="task-num-badge">Задание 2</span>
+                <span class="task-goal-badge">Цели 5.1.2.17, 5.1.2.18</span>
+              </div>
+              <span class="task-points-badge" id="sor-pts-2">2 балла</span>
+            </div>
+            <div class="task-instruction">Вычислите (ответ запишите в виде несократимой дроби или смешанного числа):</div>
+            <div class="subitems-grid">
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">а)</span>
+                  <div class="math-expr">${t.t2a.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t2a')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t2a"></div>
+                <div id="sor-sol-t2a"></div>
+              </div>
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">б)</span>
+                  <div class="math-expr">${t.t2b.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t2b')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t2b"></div>
+                <div id="sor-sol-t2b"></div>
+              </div>
+            </div>
+            <div id="sor-desc-2"></div>
+          </article>
+
+          <!-- ЗАДАНИЕ 3 (2 балла, 5.1.2.19) -->
+          <article class="task-card" id="sor-card-3">
+            <div class="task-header">
+              <div class="task-title-wrap">
+                <span class="task-num-badge">Задание 3</span>
+                <span class="task-goal-badge">Цель 5.1.2.19</span>
+              </div>
+              <span class="task-points-badge" id="sor-pts-3">2 балла</span>
+            </div>
+            <div class="task-instruction">Выполните вычитание дроби и смешанного числа из натурального числа:</div>
+            <div class="subitems-grid">
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">а)</span>
+                  <div class="math-expr">${t.t3a.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t3a')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t3a"></div>
+                <div id="sor-sol-t3a"></div>
+              </div>
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">б)</span>
+                  <div class="math-expr">${t.t3b.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t3b')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t3b"></div>
+                <div id="sor-sol-t3b"></div>
+              </div>
+            </div>
+            <div id="sor-desc-3"></div>
+          </article>
+
+          <!-- ЗАДАНИЕ 4 (4 балла, 5.1.2.20) -->
+          <article class="task-card" id="sor-card-4">
+            <div class="task-header">
+              <div class="task-title-wrap">
+                <span class="task-num-badge">Задание 4</span>
+                <span class="task-goal-badge">Цель 5.1.2.20</span>
+              </div>
+              <span class="task-points-badge" id="sor-pts-4">4 балла</span>
+            </div>
+            <div class="task-instruction">Выполните сложение и вычитание смешанных чисел с разными знаменателями:</div>
+            <div class="subitems-grid">
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">а)</span>
+                  <div class="math-expr">${t.t4a.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t4a')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t4a"></div>
+                <div id="sor-sol-t4a"></div>
+              </div>
+              <div class="subitem-box">
+                <div class="subitem-row">
+                  <span class="subitem-letter">б)</span>
+                  <div class="math-expr">${t.t4b.exprHtml} <span class="math-op">=</span></div>
+                  ${InputWidget.renderHTML('sor-t4b')}
+                  <span class="print-blank-answer"></span>
+                </div>
+                <div id="sor-fb-t4b"></div>
+                <div id="sor-sol-t4b"></div>
+              </div>
+            </div>
+            <div id="sor-desc-4"></div>
+          </article>
+
+          <!-- ЗАДАНИЕ 5 (4 балла, 5.1.2.18, 5.1.2.20) -->
+          <article class="task-card" id="sor-card-5">
+            <div class="task-header">
+              <div class="task-title-wrap">
+                <span class="task-num-badge">Задание 5</span>
+                <span class="task-goal-badge">Цели 5.1.2.18, 5.1.2.20</span>
+              </div>
+              <span class="task-points-badge" id="sor-pts-5">4 балла</span>
+            </div>
+            <div class="task-instruction">${t.t5.type === 'word' ? 'Решите задачу в 2 действия:' : 'Решите уравнение:'}</div>
+            ${
+              t.t5.type === 'word'
+                ? `<div class="word-problem-text">${t.t5.problemText}</div>`
+                : `<div class="subitem-box" style="margin-bottom: 14px;"><div class="math-expr">${t.t5.exprHtml}</div></div>`
+            }
+            <div class="answer-row">
+              <span class="answer-label">${t.t5.type === 'word' ? 'Ответ:' : 'x ='}</span>
+              ${InputWidget.renderHTML('sor-t5')}
+              <span class="print-blank-answer"></span>
+              ${t.t5.unit ? `<span class="unit-label">${t.t5.unit}</span>` : ''}
+            </div>
+            <div class="print-only print-work-space"></div>
+            <div id="sor-fb-t5" style="margin-top: 10px;"></div>
+            <div id="sor-sol-t5"></div>
+            <div id="sor-desc-5"></div>
+          </article>
+        `;
+      },
+
+      renderSolutionHTML(steps, title = 'Пошаговое решение') {
+        const items = steps.map((s, idx) => `<li><span class="step-bullet">${idx + 1}</span><span>${s}</span></li>`).join('');
+        return `
+          <div class="solution-box">
+            <div class="solution-title">${title}</div>
+            <ul class="solution-steps">${items}</ul>
+          </div>
+        `;
+      },
+
+      renderDescriptorsHTML(items) {
+        return `
+          <div class="descriptors-box">
+            <h4>Дескрипторы оценивания (Обучающийся):</h4>
+            <ul>${items.map(d => `<li>${d}</li>`).join('')}</ul>
+          </div>
+        `;
+      },
+
+      setPointsBadge(taskNum, earned, max) {
+        const el = document.getElementById(`sor-pts-${taskNum}`);
+        if (!el) return;
+        const earnedStr = Number.isInteger(earned) ? earned : earned.toFixed(1).replace('.', ',');
+        el.textContent = `${earnedStr} / ${max} б.`;
+        el.classList.remove('earned-full', 'earned-part', 'earned-zero');
+        if (earned === max) el.classList.add('earned-full');
+        else if (earned > 0) el.classList.add('earned-part');
+        else el.classList.add('earned-zero');
+      },
+
+      checkAll() {
+        Timer.pause();
+        const t = this.tasks;
+        let totalEarned = 0;
+
+        // --- Task 1 (2 pts: 1 + 1) ---
+        let p1 = 0;
+        ['t1a', 't1b'].forEach(key => {
+          const userVal = this.cmpAnswers[key];
+          const rightVal = t[key].answer;
+          const group = document.getElementById(`cmp-${key}`);
+          const fb = document.getElementById(`sor-fb-${key}`);
+          const sol = document.getElementById(`sor-sol-${key}`);
+
+          if (userVal === rightVal) {
+            p1 += 1;
+            group.classList.add('state-correct');
+            fb.innerHTML = `<div class="feedback-msg correct">✅ Верно (+1 балл)</div>`;
+          } else {
+            group.classList.add('state-wrong');
+            const reason = userVal ? `Выбрано «${userVal}», а верно «${rightVal}».` : `Знак не выбран. Верный знак: «${rightVal}».`;
+            fb.innerHTML = `<div class="feedback-msg wrong">❌ ${reason}</div>`;
+          }
+          sol.innerHTML = this.renderSolutionHTML(t[key].steps);
+        });
+        this.setPointsBadge(1, p1, 2);
+        document.getElementById('sor-desc-1').innerHTML = this.renderDescriptorsHTML([
+          'приводит обыкновенные дроби к общему знаменателю и верно сравнивает их (1 балл);',
+          'переводит неправильную дробь в смешанное число / приводит дробные части к общему знаменателю и верно сравнивает смешанные числа (1 балл).'
+        ]);
+        totalEarned += p1;
+
+        // Helper for fraction-input subitems
+        const evalFractionSub = (inputId, fbId, solId, taskObj, maxPts) => {
+          const res = InputWidget.evaluate(inputId, taskObj.answer);
+          InputWidget.setVisualState(inputId, res.status);
+          const fb = document.getElementById(fbId);
+          const sol = document.getElementById(solId);
+          const correctHtml = MathFrac.htmlInline(MathFrac.htmlCanonical(taskObj.answer));
+          let pts = 0;
+
+          if (res.status === 'correct') {
+            pts = maxPts;
+            fb.innerHTML = `<div class="feedback-msg correct">✅ Верно (+${maxPts} ${maxPts === 1 ? 'балл' : 'балла'})</div>`;
+          } else if (res.status === 'almost') {
+            // Award half points for mathematically right value not reduced / improper
+            pts = maxPts / 2;
+            const ptsText = Number.isInteger(pts) ? pts : pts.toFixed(1).replace('.', ',');
+            fb.innerHTML = `<div class="feedback-msg almost">⚠️ ${res.message} Эталонный вид: ${correctHtml} (+${ptsText} б.)</div>`;
+          } else {
+            fb.innerHTML = `<div class="feedback-msg wrong">❌ ${res.message} Правильный ответ: ${correctHtml}</div>`;
+          }
+          sol.innerHTML = this.renderSolutionHTML(taskObj.steps);
+          return pts;
+        };
+
+        // --- Task 2 (2 pts: 1 + 1) ---
+        const p2 = evalFractionSub('sor-t2a', 'sor-fb-t2a', 'sor-sol-t2a', t.t2a, 1)
+                 + evalFractionSub('sor-t2b', 'sor-fb-t2b', 'sor-sol-t2b', t.t2b, 1);
+        this.setPointsBadge(2, p2, 2);
+        document.getElementById('sor-desc-2').innerHTML = this.renderDescriptorsHTML([
+          'выполняет сложение/вычитание дробей с одинаковыми знаменателями, сокращает дробь или выделяет целую часть (1 балл);',
+          'находит общий знаменатель и верно вычисляет сумму/разность дробей с разными знаменателями (1 балл).'
+        ]);
+        totalEarned += p2;
+
+        // --- Task 3 (2 pts: 1 + 1) ---
+        const p3 = evalFractionSub('sor-t3a', 'sor-fb-t3a', 'sor-sol-t3a', t.t3a, 1)
+                 + evalFractionSub('sor-t3b', 'sor-fb-t3b', 'sor-sol-t3b', t.t3b, 1);
+        this.setPointsBadge(3, p3, 2);
+        document.getElementById('sor-desc-3').innerHTML = this.renderDescriptorsHTML([
+          'представляет натуральное число в виде смешанного числа и вычитает обыкновенную дробь (1 балл);',
+          'выполняет вычитание смешанного числа из натурального числа (1 балл).'
+        ]);
+        totalEarned += p3;
+
+        // --- Task 4 (4 pts: 2 + 2) ---
+        const p4 = evalFractionSub('sor-t4a', 'sor-fb-t4a', 'sor-sol-t4a', t.t4a, 2)
+                 + evalFractionSub('sor-t4b', 'sor-fb-t4b', 'sor-sol-t4b', t.t4b, 2);
+        this.setPointsBadge(4, p4, 4);
+        document.getElementById('sor-desc-4').innerHTML = this.renderDescriptorsHTML([
+          'приводит дробные части к общему знаменателю, складывает смешанные числа, выделяет целую часть из неправильной дроби и сокращает ответ (2 балла);',
+          'приводит дробные части к общему знаменателю, выполняет «занимание» единицы из целой части и находит верную разность (2 балла).'
+        ]);
+        totalEarned += p4;
+
+        // --- Task 5 (4 pts) ---
+        const p5 = evalFractionSub('sor-t5', 'sor-fb-t5', 'sor-sol-t5', t.t5, 4);
+        this.setPointsBadge(5, p5, 4);
+        document.getElementById('sor-desc-5').innerHTML = this.renderDescriptorsHTML(
+          t.t5.type === 'word'
+            ? [
+                'составляет выражение для первого действия по условию задачи (1 балл);',
+                'верно выполняет вычисления в первом действии со смешанными числами (1 балл);',
+                'составляет выражение для второго действия (1 балл);',
+                'верно находит окончательный ответ задачи в несократимом виде (1 балл).'
+              ]
+            : [
+                'применяет правило нахождения неизвестного компонента на первом шаге (1 балл);',
+                'верно выполняет действие со смешанными числами на первом шаге (1 балл);',
+                'применяет правило нахождения неизвестного компонента на втором шаге (1 балл);',
+                'находит корень уравнения в виде несократимого смешанного числа/дроби (1 балл).'
+              ]
+        );
+        totalEarned += p5;
+
+        // --- Overall Summary Banner ---
+        const maxTotal = 14;
+        const pct = Math.round((totalEarned / maxTotal) * 100);
+        const scoreDisp = Number.isInteger(totalEarned) ? totalEarned : totalEarned.toFixed(1).replace('.', ',');
+
+        const banner = document.getElementById('sor-result-banner');
+        banner.classList.remove('hidden', 'level-high', 'level-mid', 'level-low');
+
+        let levelClass, levelLabel, comment;
+        if (pct >= 85) {
+          levelClass = 'level-high';
+          levelLabel = 'Высокий уровень освоения (85–100%)';
+          comment = 'Превосходный результат! Ты уверенно владеешь всеми действиями с обыкновенными дробями и смешанными числами.';
+        } else if (pct >= 50) {
+          levelClass = 'level-mid';
+          levelLabel = 'Средний уровень освоения (50–84%)';
+          comment = 'Хорошая база! Разбери ошибки в пошаговых решениях ниже и закрепи сложные темы в режиме «Бесконечный тренажёр».';
+        } else {
+          levelClass = 'level-low';
+          levelLabel = 'Требуется тренировка (<50%)';
+          comment = 'Не расстраивайся — для этого и нужен тренажёр! Изучи подробные решения ниже и порешай задания по отдельным темам.';
+        }
+
+        banner.classList.add(levelClass);
+        document.getElementById('sor-score-text').textContent = `${scoreDisp} / ${maxTotal} баллов (${pct}%)`;
+        document.getElementById('sor-level-pill').textContent = levelLabel;
+        document.getElementById('sor-summary-comment').textContent = comment;
+        document.getElementById('sor-progress-fill').style.width = `${pct}%`;
+
+        // Record stats once per variant check
+        if (!this.checked) {
+          Stats.recordSOR(totalEarned, maxTotal);
+          this.checked = true;
+        }
+
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+
+      /** Render hidden answer key specifically formatted for @media print */
+      renderPrintAnswerKey() {
+        const t = this.tasks;
+        const keyEl = document.getElementById('print-answer-key');
+        const fmtSteps = (steps) => steps.map(s => `<div>• ${s}</div>`).join('');
+
+        keyEl.innerHTML = `
+          <div class="print-header">
+            <h1>Ключ ответов и решения — СОР №4 (Вариант #${this.variantNum})</h1>
+            <div>Для учителя и родителей • Математика, 5 класс (14 баллов)</div>
+          </div>
+          <div class="print-key-item">
+            <strong>Задание 1 (2 балла):</strong>
+            а) Знак <strong>${t.t1a.answer}</strong> &nbsp;|&nbsp; б) Знак <strong>${t.t1b.answer}</strong>
+          </div>
+          <div class="print-key-item">
+            <strong>Задание 2 (2 балла):</strong>
+            а) ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t2a.answer))} &nbsp;|&nbsp;
+            б) ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t2b.answer))}
+          </div>
+          <div class="print-key-item">
+            <strong>Задание 3 (2 балла):</strong>
+            а) ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t3a.answer))} &nbsp;|&nbsp;
+            б) ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t3b.answer))}
+          </div>
+          <div class="print-key-item">
+            <strong>Задание 4 (4 балла):</strong><br>
+            <div><em>а) Ответ: ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t4a.answer))}</em></div>
+            ${fmtSteps(t.t4a.steps)}
+            <div style="margin-top:6px;"><em>б) Ответ: ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t4b.answer))}</em></div>
+            ${fmtSteps(t.t4b.steps)}
+          </div>
+          <div class="print-key-item">
+            <strong>Задание 5 (4 балла):</strong>
+            <em>Ответ: ${MathFrac.htmlInline(MathFrac.htmlCanonical(t.t5.answer))} ${t.t5.unit || ''}</em>
+            ${fmtSteps(t.t5.steps)}
+          </div>
+        `;
+      },
+
+      printVariant() {
+        const withAnswers = document.getElementById('print-answers-checkbox').checked;
+        document.body.classList.toggle('print-with-answers', withAnswers);
+        this.renderPrintAnswerKey();
+        window.print();
+      }
+    };
+
+    /* ==========================================================================
+       8. MODE 2: INFINITE TOPIC TRAINER CONTROLLER
+       ========================================================================== */
+    const TRAINER_TOPICS = [
+      { id: 'all', title: '🎲 Все темы вперемешку', code: '5.1.2.16 – 5.1.2.20' },
+      { id: 'compare', title: '⚖️ Сравнение дробей', code: 'Цель 5.1.2.16' },
+      { id: 'same', title: '➕ Одинаковые знаменатели', code: 'Цель 5.1.2.17' },
+      { id: 'diff', title: '🔀 Разные знаменатели', code: 'Цель 5.1.2.18' },
+      { id: 'natural', title: '➖ Из натурального числа', code: 'Цель 5.1.2.19' },
+      { id: 'mixed', title: '🧩 Смешанные числа', code: 'Цель 5.1.2.20' },
+      { id: 'wordeq', title: '📘 Задачи и уравнения', code: '5.1.2.18, 5.1.2.20' }
+    ];
+
+    const Trainer = {
+      topic: 'all',
+      difficulty: 'standard',
+      currentProblem: null,
+      selectedCmp: null,
+      hintIndex: 0,
+      solvedCurrent: false,
+      failedCurrent: false,
+
+      // Session counters
+      streak: 0,
+      sessionSolved: 0,
+      sessionAttempts: 0,
+
+      init() {
+        this.renderTopicCards();
+        this.nextProblem();
+      },
+
+      renderTopicCards() {
+        const grid = document.getElementById('trainer-topics-grid');
+        grid.innerHTML = TRAINER_TOPICS.map(t => `
+          <button type="button" class="topic-card ${t.id === this.topic ? 'active' : ''}" onclick="Trainer.setTopic('${t.id}')">
+            <span class="topic-card-title">${t.title}</span>
+            <span class="topic-card-code">${t.code}</span>
+          </button>
+        `).join('');
+      },
+
+      setTopic(topicId) {
+        this.topic = topicId;
+        this.renderTopicCards();
+        this.nextProblem();
+      },
+
+      setDifficulty(diff) {
+        this.difficulty = diff;
+        document.querySelectorAll('.diff-pill').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.diff === diff);
+        });
+        this.nextProblem();
+      },
+
+      generateByTopic(topic, diff) {
+        if (topic === 'all') {
+          const pool = ['compare', 'same', 'diff', 'natural', 'mixed', 'wordeq'];
+          topic = Rand.pick(pool);
+        }
+        switch (topic) {
+          case 'compare':
+            return Rand.chance(0.5) ? Generators.genCompareFractions(diff) : Generators.genCompareMixed(diff);
+          case 'same':
+            return Generators.genSameDen(diff);
+          case 'diff':
+            return Generators.genDiffDen(diff);
+          case 'natural':
+            return Generators.genSubFromNatural(diff);
+          case 'mixed':
+            return Rand.chance(0.5) ? Generators.genMixedAddCarry(diff) : Generators.genMixedSubBorrow(diff);
+          case 'wordeq':
+            return Rand.chance(0.55) ? Generators.genWordProblem(diff) : Generators.genEquation(diff);
+          default:
+            return Generators.genDiffDen(diff);
+        }
+      },
+
+      nextProblem() {
+        this.currentProblem = this.generateByTopic(this.topic, this.difficulty);
+        this.selectedCmp = null;
+        this.hintIndex = 0;
+        this.solvedCurrent = false;
+        this.failedCurrent = false;
+
+        const p = this.currentProblem;
+        document.getElementById('tr-topic-badge').textContent = p.topicName;
+        document.getElementById('tr-goal-badge').textContent = `Цель ${p.goal}`;
+        document.getElementById('tr-diff-badge').textContent = DIFF_CONFIG[this.difficulty].label;
+        document.getElementById('tr-instruction').textContent = p.instruction;
+
+        document.getElementById('tr-feedback-container').innerHTML = '';
+        document.getElementById('tr-hint-container').innerHTML = '';
+        document.getElementById('tr-solution-container').innerHTML = '';
+        document.getElementById('tr-btn-show-sol').classList.add('hidden');
+        document.getElementById('tr-btn-check').disabled = false;
+
+        const area = document.getElementById('tr-problem-area');
+        const hintNote = document.getElementById('tr-input-hint');
+
+        if (p.type === 'compare') {
+          hintNote.classList.add('hidden');
+          area.innerHTML = `
+            <div class="math-expr" style="font-size: 1.45rem;">
+              ${p.leftHtml}
+              <span class="cmp-group" id="tr-cmp-group">
+                <button type="button" class="cmp-btn" onclick="Trainer.selectCmp('<', this)" aria-label="Меньше">&lt;</button>
+                <button type="button" class="cmp-btn" onclick="Trainer.selectCmp('=', this)" aria-label="Равно">=</button>
+                <button type="button" class="cmp-btn" onclick="Trainer.selectCmp('>', this)" aria-label="Больше">&gt;</button>
+              </span>
+              ${p.rightHtml}
+            </div>
+          `;
+        } else if (p.type === 'word') {
+          hintNote.classList.remove('hidden');
+          area.innerHTML = `
+            <div class="word-problem-text" style="width:100%; margin-bottom:4px;">${p.problemText}</div>
+            <div class="answer-row">
+              <span class="answer-label">Ответ:</span>
+              ${InputWidget.renderHTML('tr-ans', 'trainer')}
+              <span class="unit-label">${p.unit}</span>
+            </div>
+          `;
+          setTimeout(() => document.getElementById('tr-ans-whole')?.focus(), 50);
+        } else if (p.type === 'equation') {
+          hintNote.classList.remove('hidden');
+          area.innerHTML = `
+            <div class="math-expr" style="font-size: 1.38rem;">${p.exprHtml}</div>
+            <div class="answer-row">
+              <span class="answer-label"><span class="math-var">x</span> =</span>
+              ${InputWidget.renderHTML('tr-ans', 'trainer')}
+            </div>
+          `;
+          setTimeout(() => document.getElementById('tr-ans-whole')?.focus(), 50);
+        } else {
+          hintNote.classList.remove('hidden');
+          area.innerHTML = `
+            <div class="answer-row">
+              <div class="math-expr" style="font-size: 1.4rem;">${p.exprHtml} <span class="math-op">=</span></div>
+              ${InputWidget.renderHTML('tr-ans', 'trainer')}
+            </div>
+          `;
+          setTimeout(() => { const el = document.getElementById('tr-ans-whole'); if (el && !VirtualKeypad.enabled) el.focus(); }, 50);
+        }
+        if (typeof VirtualKeypad !== 'undefined') VirtualKeypad.syncInputAttributes();
+      },
+
+      selectCmp(sign, btnEl) {
+        if (this.solvedCurrent) return;
+        this.selectedCmp = sign;
+        const group = document.getElementById('tr-cmp-group');
+        group.classList.remove('state-correct', 'state-wrong');
+        group.querySelectorAll('.cmp-btn').forEach(b => b.classList.remove('selected'));
+        btnEl.classList.add('selected');
+      },
+
+      showHint() {
+        const p = this.currentProblem;
+        if (!p || !p.hints || p.hints.length === 0) return;
+        if (this.hintIndex < p.hints.length) {
+          this.hintIndex += 1;
+        }
+        const shown = p.hints.slice(0, this.hintIndex);
+        document.getElementById('tr-hint-container').innerHTML = `
+          <div class="hint-box">
+            <strong>💡 Подсказка (${this.hintIndex} из ${p.hints.length})</strong>
+            ${shown.map((h, i) => `<div style="margin-top:${i ? 6 : 0}px;">${i + 1}. ${h}</div>`).join('')}
+          </div>
+        `;
+      },
+
+      revealSolution() {
+        const p = this.currentProblem;
+        document.getElementById('tr-solution-container').innerHTML = SOR.renderSolutionHTML(p.steps);
+      },
+
+      updateMetrics() {
+        document.getElementById('trainer-streak').textContent = this.streak;
+        document.getElementById('trainer-session-solved').textContent = this.sessionSolved;
+        const acc = this.sessionAttempts > 0
+          ? `${Math.round((this.sessionSolved / this.sessionAttempts) * 100)}%`
+          : '—';
+        document.getElementById('trainer-accuracy').textContent = acc;
+        document.getElementById('trainer-streak-pill').classList.toggle('streak-hot', this.streak >= 3);
+      },
+
+      check() {
+        if (this.solvedCurrent) {
+          this.nextProblem();
+          return;
+        }
+        const p = this.currentProblem;
+        const fbEl = document.getElementById('tr-feedback-container');
+
+        if (p.type === 'compare') {
+          if (!this.selectedCmp) {
+            fbEl.innerHTML = `<div class="feedback-msg almost">⚠️ Выбери знак сравнения (&lt;, = или &gt;), прежде чем проверять!</div>`;
+            return;
+          }
+          const group = document.getElementById('tr-cmp-group');
+          if (this.selectedCmp === p.answer) {
+            group.classList.add('state-correct');
+            this.handleCorrect('Верно! Отличное сравнение дробей!');
+          } else {
+            group.classList.add('state-wrong');
+            this.handleWrong(`Неверно. Попробуй ещё раз или открой подсказку!`);
+          }
+          return;
+        }
+
+        // Fraction / mixed input evaluation
+        const res = InputWidget.evaluate('tr-ans', p.answer);
+
+        if (res.status === 'empty' || res.status === 'invalid') {
+          fbEl.innerHTML = `<div class="feedback-msg almost">⚠️ ${res.message}</div>`;
+          return;
+        }
+
+        InputWidget.setVisualState('tr-ans', res.status);
+
+        if (res.status === 'almost') {
+          // Mathematically equivalent, NOT reduced or improper: let student fix WITHOUT breaking streak!
+          fbEl.innerHTML = `<div class="feedback-msg almost">🟡 ${res.message}</div>`;
+          return;
+        }
+
+        if (res.status === 'correct') {
+          this.handleCorrect(res.message);
+        } else {
+          this.handleWrong('Пока неверно. Проверь общий знаменатель и вычисления, или воспользуйся подсказкой!');
+        }
+      },
+
+      handleCorrect(msg) {
+        const fbEl = document.getElementById('tr-feedback-container');
+        fbEl.innerHTML = `<div class="feedback-msg correct">✅ ${msg}</div>`;
+        this.solvedCurrent = true;
+        document.getElementById('tr-btn-check').disabled = true;
+
+        // Count toward accuracy/streak cleanly
+        if (!this.failedCurrent) {
+          this.streak += 1;
+          this.sessionSolved += 1;
+          this.sessionAttempts += 1;
+          Stats.recordTrainer(true, this.streak);
+        } else {
+          // Fixed after mistake: increment solved count without double-counting attempts or inflating streak
+          this.sessionSolved += 1;
+          Stats.recordTrainerRetrySolved();
+        }
+        this.updateMetrics();
+        this.revealSolution();
+      },
+
+      handleWrong(msg) {
+        const fbEl = document.getElementById('tr-feedback-container');
+        fbEl.innerHTML = `<div class="feedback-msg wrong">❌ ${msg}</div>`;
+        document.getElementById('tr-btn-show-sol').classList.remove('hidden');
+
+        if (!this.failedCurrent) {
+          this.failedCurrent = true;
+          this.streak = 0;
+          this.sessionAttempts += 1;
+          Stats.recordTrainer(false, 0);
+          this.updateMetrics();
+        }
+      }
+    };
+
+    /* ==========================================================================
+       9. UI NAVIGATION, MODAL & TOAST HELPERS
+       ========================================================================== */
+    function switchMode(mode) {
+      const isSor = mode === 'sor';
+      if (!isSor) {
+        Timer.pause();
+      }
+      if (typeof VirtualKeypad !== 'undefined') {
+        VirtualKeypad.hide();
+      }
+      document.getElementById('view-sor').classList.toggle('hidden', !isSor);
+      document.getElementById('view-trainer').classList.toggle('hidden', isSor);
+
+      const tabSor = document.getElementById('tab-sor');
+      const tabTr = document.getElementById('tab-trainer');
+      tabSor.classList.toggle('active', isSor);
+      tabTr.classList.toggle('active', !isSor);
+      tabSor.setAttribute('aria-selected', String(isSor));
+      tabTr.setAttribute('aria-selected', String(!isSor));
+    }
+
+    function openResetModal() {
+      document.getElementById('reset-modal').classList.remove('hidden');
+    }
+
+    function closeResetModal() {
+      document.getElementById('reset-modal').classList.add('hidden');
+    }
+
+    function confirmResetStats() {
+      Stats.reset();
+      Trainer.streak = 0;
+      Trainer.sessionSolved = 0;
+      Trainer.sessionAttempts = 0;
+      Trainer.updateMetrics();
+      closeResetModal();
+      showToast('Статистика успешно сброшена');
+    }
+
+    let toastTimer = null;
+    function showToast(text) {
+      const el = document.getElementById('toast');
+      el.textContent = text;
+      el.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+
+    /* ==========================================================================
+       10. BOOTSTRAP ON PAGE LOAD
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      VirtualKeypad.init();
+      InputWidget.initGlobalListeners();
+      Stats.load();
+      SOR.generateNew();
+      Trainer.init();
+      VirtualKeypad.syncInputAttributes();
+
+      const printCb = document.getElementById('print-answers-checkbox');
+      if (printCb) {
+        printCb.addEventListener('change', () => {
+          document.body.classList.toggle('print-with-answers', printCb.checked);
+        });
+      }
+      window.addEventListener('beforeprint', () => {
+        if (printCb) {
+          document.body.classList.toggle('print-with-answers', printCb.checked);
+        }
+        SOR.renderPrintAnswerKey();
+      });
+    });
+  </script>
+</body>
+</html>
